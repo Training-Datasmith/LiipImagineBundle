@@ -19,16 +19,10 @@ final class Flip extends FilterAbstract
     public const NAME = 'flip';
 
     /**
-     * @var string
-     */
-    private $axis;
-
-    /**
      * @param string $axis possible values are: "x", "horizontal", "y", or "vertical"
      */
-    public function __construct(string $axis)
+    public function __construct(private string $axis)
     {
-        $this->axis = $axis;
     }
 
     public function getAxis(): string

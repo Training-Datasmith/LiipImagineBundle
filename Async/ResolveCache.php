@@ -20,28 +20,10 @@ use Liip\ImagineBundle\Exception\LogicException;
 class ResolveCache implements \JsonSerializable
 {
     /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var array|string[]|null
-     */
-    private $filters;
-
-    /**
-     * @var bool
-     */
-    private $force;
-
-    /**
      * @param string[]|null $filters
      */
-    public function __construct(string $path, ?array $filters = null, bool $force = false)
+    public function __construct(private string $path, private ?array $filters = null, private bool $force = false)
     {
-        $this->path = $path;
-        $this->filters = $filters;
-        $this->force = $force;
     }
 
     public function getPath(): string

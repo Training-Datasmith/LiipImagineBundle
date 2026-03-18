@@ -16,30 +16,12 @@ use Liip\ImagineBundle\Binary\FileBinaryInterface;
 class FileBinary implements FileBinaryInterface
 {
     /**
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var string
-     */
-    protected $mimeType;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
      * @param string $path
      * @param string $mimeType
      * @param string $format
      */
-    public function __construct($path, $mimeType, $format = null)
+    public function __construct(protected $path, protected $mimeType, protected $format = null)
     {
-        $this->path = $path;
-        $this->mimeType = $mimeType;
-        $this->format = $format;
     }
 
     /**
@@ -47,7 +29,7 @@ class FileBinary implements FileBinaryInterface
      *
      * @return string|false
      */
-    public function getContent()
+    public function getContent(): string|false
     {
         return file_get_contents($this->path);
     }

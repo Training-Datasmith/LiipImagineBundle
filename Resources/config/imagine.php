@@ -88,7 +88,7 @@ use Liip\ImagineBundle\Imagine\Filter\PostProcessor\OptiPngPostProcessor;
 use Liip\ImagineBundle\Imagine\Filter\PostProcessor\PngquantPostProcessor;
 use Liip\ImagineBundle\Service\FilterService;
 
-return static function (ContainerConfigurator $container) {
+return static function (ContainerConfigurator $container): void {
     $services = $container->services();
     $parameters = $container->parameters();
 

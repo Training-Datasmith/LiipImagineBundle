@@ -15,7 +15,7 @@ use Imagine\Image\ImageInterface;
 
 class InterlaceFilterLoader implements LoaderInterface
 {
-    public function load(ImageInterface $image, array $options = [])
+    public function load(ImageInterface $image, array $options = []): ImageInterface
     {
         $mode = ImageInterface::INTERLACE_LINE;
         if (!empty($options['mode'])) {

@@ -18,14 +18,8 @@ final class Interlace extends FilterAbstract
 {
     public const NAME = 'interlace';
 
-    /**
-     * @var string
-     */
-    private $mode;
-
-    public function __construct(string $mode)
+    public function __construct(private string $mode)
     {
-        $this->mode = $mode;
     }
 
     public function getMode(): string

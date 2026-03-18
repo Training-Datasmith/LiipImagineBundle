@@ -55,8 +55,7 @@ class FixedFilterLoader implements LoaderInterface
 
         // apply filters to image
         $image = $resize->apply($image);
-        $image = $crop->apply($image);
 
-        return $image;
+        return $crop->apply($image);
     }
 }

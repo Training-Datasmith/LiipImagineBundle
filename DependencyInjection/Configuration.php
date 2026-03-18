@@ -24,23 +24,11 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * @var ResolverFactoryInterface[]
-     */
-    protected $resolversFactories;
-
-    /**
-     * @var LoaderFactoryInterface[]
-     */
-    protected $loadersFactories;
-
-    /**
      * @param ResolverFactoryInterface[] $resolversFactories
      * @param LoaderFactoryInterface[]   $loadersFactories
      */
-    public function __construct(array $resolversFactories, array $loadersFactories)
+    public function __construct(protected array $resolversFactories, protected array $loadersFactories)
     {
-        $this->resolversFactories = $resolversFactories;
-        $this->loadersFactories = $loadersFactories;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -65,14 +53,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->beforeNormalization()
-                ->ifTrue(function ($v) {
-                    return
-                        empty($v['loaders'])
-                        || empty($v['loaders']['default'])
-                        || empty($v['resolvers'])
-                        || empty($v['resolvers']['default']);
-                })
-                ->then(function ($v) {
+                ->ifTrue(fn($v) => empty($v['loaders'])
+                || empty($v['loaders']['default'])
+                || empty($v['resolvers'])
+                || empty($v['resolvers']['default']))
+                ->then(function (array $v): array {
                     if (empty($v['loaders'])) {
                         $v['loaders'] = [];
                     }
@@ -106,9 +91,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('driver')->defaultValue('gd')
                     ->validate()
-                        ->ifTrue(function ($v) {
-                            return !\in_array($v, ['gd', 'imagick', 'gmagick', 'vips'], true);
-                        })
+                        ->ifTrue(fn($v) => !\in_array($v, ['gd', 'imagick', 'gmagick', 'vips'], true))
                         ->thenInvalid('Invalid imagine driver specified: %s')
                     ->end()
                 ->end()
@@ -154,9 +137,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('filter_runtime_action')->defaultValue(\sprintf('%s::filterRuntimeAction', ImagineController::class))->end()
                         ->integerNode('redirect_response_code')->defaultValue(302)
                             ->validate()
-                                ->ifTrue(function ($redirectResponseCode) {
-                                    return !\in_array($redirectResponseCode, ControllerConfig::REDIRECT_RESPONSE_CODES, true);
-                                })
+                                ->ifTrue(fn($redirectResponseCode) => !\in_array($redirectResponseCode, ControllerConfig::REDIRECT_RESPONSE_CODES, true))
                                 ->thenInvalid('Invalid redirect response code "%s" (must be 201, 301, 302, 303, 307, or 308).')
                             ->end()
                         ->end()
@@ -204,9 +185,7 @@ class Configuration implements ConfigurationInterface
                         ->info('Twig mode: none/lazy/legacy (default)')
                         ->values(['none', 'lazy', 'legacy'])
                         ->validate()
-                            ->ifTrue(function ($v) {
-                                return 'legacy' === $v;
-                            })
+                            ->ifTrue(fn($v) => 'legacy' === $v)
                             ->then(function ($v) {
                                 @trigger_error('Twig "legacy" mode has been deprecated and will be removed in 3.0. Use "none" or "lazy".', E_USER_DEPRECATED);
 
@@ -263,12 +242,12 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addResolversSections(ArrayNodeDefinition $resolversPrototypeNode)
+    private function addResolversSections(ArrayNodeDefinition $resolversPrototypeNode): void
     {
         $this->addConfigurationSections($this->resolversFactories, $resolversPrototypeNode, 'resolver');
     }
 
-    private function addLoadersSections(ArrayNodeDefinition $resolversPrototypeNode)
+    private function addLoadersSections(ArrayNodeDefinition $resolversPrototypeNode): void
     {
         $this->addConfigurationSections($this->loadersFactories, $resolversPrototypeNode, 'loader');
     }
@@ -276,7 +255,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @param FactoryInterface[] $factories
      */
-    private function addConfigurationSections(array $factories, ArrayNodeDefinition $definition, $type)
+    private function addConfigurationSections(array $factories, ArrayNodeDefinition $definition, string $type): void
     {
         foreach ($factories as $f) {
             $f->addConfiguration($definition->children()->arrayNode($f->getName()));
@@ -284,7 +263,7 @@ class Configuration implements ConfigurationInterface
 
         $definition->end()
             ->validate()
-            ->ifTrue(function ($array) use ($type) {
+            ->ifTrue(function ($array) use ($type): bool {
                 foreach ($array as $name => $element) {
                     if (!$element) {
                         throw new InvalidConfigurationException(ucfirst($type).' "'.$name.'" must have a factory configured');

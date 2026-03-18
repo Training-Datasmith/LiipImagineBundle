@@ -29,29 +29,14 @@ class FlysystemResolver implements ResolverInterface
      */
     protected $requestContext;
 
-    /**
-     * @var string
-     */
-    protected $webRoot;
+    protected string $webRoot;
 
-    /**
-     * @var string
-     */
-    protected $cachePrefix;
+    protected string $cachePrefix;
 
     /**
      * @var string
      */
     protected $cacheRoot;
-
-    /**
-     * Flysystem specific visibility.
-     *
-     * @see AdapterInterface
-     *
-     * @var string
-     */
-    protected $visibility;
 
     /**
      * FlysystemResolver constructor.
@@ -65,7 +50,12 @@ class FlysystemResolver implements ResolverInterface
         RequestContext $requestContext,
         $rootUrl,
         $cachePrefix = 'media/cache',
-        $visibility = AdapterInterface::VISIBILITY_PUBLIC
+        /**
+         * Flysystem specific visibility.
+         *
+         * @see AdapterInterface
+         */
+        protected $visibility = AdapterInterface::VISIBILITY_PUBLIC
     ) {
         $this->flysystem = $flysystem;
         $this->requestContext = $requestContext;
@@ -73,7 +63,6 @@ class FlysystemResolver implements ResolverInterface
         $this->webRoot = rtrim($rootUrl, '/');
         $this->cachePrefix = ltrim(str_replace('//', '/', $cachePrefix), '/');
         $this->cacheRoot = $this->cachePrefix;
-        $this->visibility = $visibility;
     }
 
     /**
@@ -99,7 +88,7 @@ class FlysystemResolver implements ResolverInterface
      *
      * @return string The absolute URL of the cached image
      */
-    public function resolve($path, $filter)
+    public function resolve($path, $filter): string
     {
         return \sprintf(
             '%s/%s',
@@ -115,7 +104,7 @@ class FlysystemResolver implements ResolverInterface
      * @param string          $path   The path where the original file is expected to be
      * @param string          $filter The name of the imagine filter in effect
      */
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, $path, $filter): void
     {
         $this->flysystem->put(
             $this->getFilePath($path, $filter),
@@ -128,7 +117,7 @@ class FlysystemResolver implements ResolverInterface
      * @param string[] $paths   The paths where the original files are expected to be
      * @param string[] $filters The imagine filters in effect
      */
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $filters): void
     {
         if (empty($paths) && empty($filters)) {
             return;
@@ -157,7 +146,7 @@ class FlysystemResolver implements ResolverInterface
         return $this->getFileUrl($path, $filter);
     }
 
-    protected function getFileUrl($path, $filter)
+    protected function getFileUrl($path, string $filter): string
     {
         // crude way of sanitizing URL scheme ("protocol") part
         $path = str_replace('://', '---', $path);

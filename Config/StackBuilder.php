@@ -15,20 +15,8 @@ use Liip\ImagineBundle\Factory\Config\StackFactoryInterface;
 
 final class StackBuilder implements StackBuilderInterface
 {
-    /**
-     * @var StackFactoryInterface
-     */
-    private $stackFactory;
-
-    /**
-     * @var FilterFactoryCollection
-     */
-    private $filterFactoryCollection;
-
-    public function __construct(StackFactoryInterface $stackFactory, FilterFactoryCollection $filterFactoryCollection)
+    public function __construct(private StackFactoryInterface $stackFactory, private FilterFactoryCollection $filterFactoryCollection)
     {
-        $this->stackFactory = $stackFactory;
-        $this->filterFactoryCollection = $filterFactoryCollection;
     }
 
     public function build(string $stackName, array $stackData): StackInterface

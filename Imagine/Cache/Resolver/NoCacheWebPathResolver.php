@@ -27,12 +27,12 @@ class NoCacheWebPathResolver implements ResolverInterface
         $this->requestContext = $requestContext;
     }
 
-    public function isStored($path, $filter)
+    public function isStored($path, $filter): bool
     {
         return true;
     }
 
-    public function resolve($path, $filter)
+    public function resolve($path, $filter): string
     {
         $port = '';
         if ('https' === $this->requestContext->getScheme() && 443 !== $this->requestContext->getHttpsPort()) {

@@ -19,8 +19,7 @@ class StripFilterLoader implements LoaderInterface
     public function load(ImageInterface $image, array $options = [])
     {
         $filter = new Strip();
-        $image = $filter->apply($image);
 
-        return $image;
+        return $filter->apply($image);
     }
 }

@@ -13,29 +13,14 @@ namespace Liip\ImagineBundle\Service;
 
 final class FilterPathContainer
 {
-    /**
-     * @var string
-     */
-    private $source;
-
-    /**
-     * @var string
-     */
-    private $target;
-
-    /**
-     * @var mixed[]
-     */
-    private $options;
+    private string $target;
 
     /**
      * @param mixed[] $options
      */
-    public function __construct(string $source, string $target = '', array $options = [])
+    public function __construct(private string $source, string $target = '', private array $options = [])
     {
-        $this->source = $source;
-        $this->target = '' !== $target ? $target : $source;
-        $this->options = $options;
+        $this->target = '' !== $target ? $target : $this->source;
     }
 
     public function createWebp(array $options): self

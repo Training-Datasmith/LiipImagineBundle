@@ -38,12 +38,12 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
         return $this->setTaggedLoaderDefinition($loaderName, $definition, $container);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'filesystem';
     }
 
-    public function addConfiguration(ArrayNodeDefinition $builder)
+    public function addConfiguration(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -55,9 +55,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
                 ->arrayNode('data_root')
                     ->beforeNormalization()
                     ->ifString()
-                        ->then(function ($value) {
-                            return [$value];
-                        })
+                        ->then(fn($value) => [$value])
                     ->end()
                     ->treatNullLike([])
                     ->treatFalseLike([])
@@ -98,7 +96,10 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
      *
      * @return string[]
      */
-    private function resolveDataRoots(array $staticPaths, array $config, ContainerBuilder $container)
+    /**
+     * @return mixed[]
+     */
+    private function resolveDataRoots(array $staticPaths, array $config, ContainerBuilder $container): array
     {
         if (false === $config['enabled']) {
             return $staticPaths;
@@ -118,7 +119,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
     /**
      * @return string[]
      */
-    private function getBundleResourcePaths(ContainerBuilder $container)
+    private function getBundleResourcePaths(ContainerBuilder $container): array
     {
         if ($container->hasParameter('kernel.bundles_metadata')) {
             $paths = $this->getBundlePathsUsingMetadata($container->getParameter('kernel.bundles_metadata'));
@@ -126,9 +127,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
             $paths = $this->getBundlePathsUsingNamedObj($container->getParameter('kernel.bundles'));
         }
 
-        return array_map(function ($path) {
-            return $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public';
-        }, $paths);
+        return array_map(fn(string $path) => $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public', $paths);
     }
 
     /**
@@ -136,11 +135,9 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
      *
      * @return string[]
      */
-    private function getBundlePathsUsingMetadata(array $metadata)
+    private function getBundlePathsUsingMetadata(array $metadata): array
     {
-        return array_combine(array_keys($metadata), array_map(function ($data) {
-            return $data['path'];
-        }, $metadata));
+        return array_combine(array_keys($metadata), array_map(fn(array $data) => $data['path'], $metadata));
     }
 
     /**
@@ -148,7 +145,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
      *
      * @return string[]
      */
-    private function getBundlePathsUsingNamedObj(array $classes)
+    private function getBundlePathsUsingNamedObj(array $classes): array
     {
         $paths = [];
 

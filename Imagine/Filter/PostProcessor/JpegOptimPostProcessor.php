@@ -19,40 +19,24 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class JpegOptimPostProcessor extends AbstractPostProcessor
 {
     /**
-     * If set --strip-all will be passed to jpegoptim.
-     *
-     * @var bool
-     */
-    protected $strip;
-
-    /**
-     * If set, --max=$value will be passed to jpegoptim.
-     *
-     * @var int
-     */
-    protected $quality;
-
-    /**
-     * If set to true --all-progressive will be passed to jpegoptim, otherwise --all-normal will be passed.
-     *
-     * @var bool
-     */
-    protected $progressive;
-
-    /**
      * @param string $executablePath    Path to the jpegoptim binary
      * @param bool   $strip             Strip all markers from output
      * @param int    $quality           Set maximum image quality factor
      * @param bool   $progressive       Force output to be progressive
      * @param string $temporaryRootPath Directory where temporary file will be written
      */
-    public function __construct($executablePath = '/usr/bin/jpegoptim', $strip = true, $quality = null, $progressive = true, $temporaryRootPath = null)
+    public function __construct(string $executablePath = '/usr/bin/jpegoptim', /**
+     * If set --strip-all will be passed to jpegoptim.
+     */
+    protected $strip = true, /**
+     * If set, --max=$value will be passed to jpegoptim.
+     */
+    protected $quality = null, /**
+     * If set to true --all-progressive will be passed to jpegoptim, otherwise --all-normal will be passed.
+     */
+    protected $progressive = true, ?string $temporaryRootPath = null)
     {
         parent::__construct($executablePath, $temporaryRootPath);
-
-        $this->strip = $strip;
-        $this->quality = $quality;
-        $this->progressive = $progressive;
     }
 
     /**
@@ -60,10 +44,8 @@ class JpegOptimPostProcessor extends AbstractPostProcessor
      *             class's constructor to set the property state.
      *
      * @param int $maxQuality
-     *
-     * @return JpegOptimPostProcessor
      */
-    public function setMax($maxQuality)
+    public function setMax($maxQuality): static
     {
         $this->triggerSetterMethodDeprecation(__METHOD__);
         $this->quality = $maxQuality;
@@ -76,10 +58,8 @@ class JpegOptimPostProcessor extends AbstractPostProcessor
      *             class's constructor to set the property state.
      *
      * @param bool $progressive
-     *
-     * @return JpegOptimPostProcessor
      */
-    public function setProgressive($progressive)
+    public function setProgressive($progressive): static
     {
         $this->triggerSetterMethodDeprecation(__METHOD__);
         $this->progressive = $progressive;
@@ -92,10 +72,8 @@ class JpegOptimPostProcessor extends AbstractPostProcessor
      *             class's constructor to set the property state.
      *
      * @param bool $strip
-     *
-     * @return JpegOptimPostProcessor
      */
-    public function setStripAll($strip)
+    public function setStripAll($strip): static
     {
         $this->triggerSetterMethodDeprecation(__METHOD__);
         $this->strip = $strip;

@@ -16,30 +16,12 @@ use Liip\ImagineBundle\Binary\BinaryInterface;
 class Binary implements BinaryInterface
 {
     /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @var string
-     */
-    protected $mimeType;
-
-    /**
-     * @var string
-     */
-    protected $format;
-
-    /**
      * @param string $content
      * @param string $mimeType
      * @param string $format
      */
-    public function __construct($content, $mimeType, $format = null)
+    public function __construct(protected $content, protected $mimeType, protected $format = null)
     {
-        $this->content = $content;
-        $this->mimeType = $mimeType;
-        $this->format = $format;
     }
 
     /**

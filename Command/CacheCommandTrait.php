@@ -97,9 +97,7 @@ trait CacheCommandTrait
     private function outputCommandResult(array $images, array $filters, string $singularAction): void
     {
         if (!$this->outputMachineReadable) {
-            $wordPluralizer = function (int $count, string $singular) {
-                return 1 === $count ? $singular : \sprintf('%ss', $singular);
-            };
+            $wordPluralizer = (fn(int $count, string $singular) => 1 === $count ? $singular : \sprintf('%ss', $singular));
 
             $imagePathsSize = \count($images);
             $filterSetsSize = \count($filters);

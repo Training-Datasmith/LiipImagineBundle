@@ -17,23 +17,20 @@ namespace Liip\ImagineBundle\Config\Filter\Argument;
 final class Size
 {
     /**
-     * @var int
-     */
-    private $width;
-
-    /**
-     * @var int
-     */
-    private $height;
-
-    /**
      * To allow keeping aspect ratio, it is allowed to only specify one of width or height.
      * It is however not allowed to specify neither dimension.
      */
-    public function __construct(?int $width = null, ?int $height = null)
+    public function __construct(
+        /**
+         * @var int
+         */
+        private ?int $width = null,
+        /**
+         * @var int
+         */
+        private ?int $height = null
+    )
     {
-        $this->width = $width;
-        $this->height = $height;
     }
 
     public function getWidth(): ?int

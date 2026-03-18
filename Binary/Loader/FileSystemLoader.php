@@ -33,18 +33,13 @@ class FileSystemLoader implements LoaderInterface
     protected $extensionGuesser;
 
     /**
-     * @var LocatorInterface
-     */
-    protected $locator;
-
-    /**
      * @param MimeTypeGuesserInterface|DeprecatedMimeTypeGuesserInterface $mimeGuesser
      * @param MimeTypesInterface|DeprecatedExtensionGuesserInterface      $extensionGuesser
      */
     public function __construct(
         $mimeGuesser,
         $extensionGuesser,
-        LocatorInterface $locator
+        protected \Liip\ImagineBundle\Binary\Locator\LocatorInterface $locator
     ) {
         if (!$mimeGuesser instanceof MimeTypeGuesserInterface && !$mimeGuesser instanceof DeprecatedMimeTypeGuesserInterface) {
             throw new InvalidArgumentException('$mimeGuesser must be an instance of Symfony\Component\Mime\MimeTypeGuesserInterface or Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface');
@@ -64,10 +59,9 @@ class FileSystemLoader implements LoaderInterface
 
         $this->mimeTypeGuesser = $mimeGuesser;
         $this->extensionGuesser = $extensionGuesser;
-        $this->locator = $locator;
     }
 
-    public function find($path)
+    public function find($path): \Liip\ImagineBundle\Model\FileBinary
     {
         $path = $this->locator->locate($path);
 

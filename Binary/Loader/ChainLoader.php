@@ -18,16 +18,14 @@ class ChainLoader implements LoaderInterface
     /**
      * @var LoaderInterface[]
      */
-    private $loaders;
+    private array $loaders;
 
     /**
      * @param LoaderInterface[] $loaders
      */
     public function __construct(array $loaders)
     {
-        $this->loaders = array_filter($loaders, function ($loader) {
-            return $loader instanceof LoaderInterface;
-        });
+        $this->loaders = array_filter($loaders, fn(\Liip\ImagineBundle\Binary\Loader\LoaderInterface $loader) => $loader instanceof LoaderInterface);
     }
 
     public function find($path)

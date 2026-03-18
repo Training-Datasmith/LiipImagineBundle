@@ -28,19 +28,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class PngquantPostProcessor extends AbstractPostProcessor
 {
     /**
-     * @var string Quality to pass to pngquant
-     */
-    protected $quality;
-
-    /**
-     * @param string $executablePath
      * @param array  $quality
      */
-    public function __construct($executablePath = '/usr/bin/pngquant', $quality = [80, 100])
+    public function __construct(string $executablePath = '/usr/bin/pngquant', protected $quality = [80, 100])
     {
         parent::__construct($executablePath);
-
-        $this->quality = $quality;
     }
 
     /**
@@ -48,10 +40,8 @@ class PngquantPostProcessor extends AbstractPostProcessor
      *             class's constructor to set the property state.
      *
      * @param string $quality
-     *
-     * @return PngquantPostProcessor
      */
-    public function setQuality($quality)
+    public function setQuality($quality): static
     {
         $this->triggerSetterMethodDeprecation(__METHOD__);
         $this->quality = $quality;
@@ -96,9 +86,7 @@ class PngquantPostProcessor extends AbstractPostProcessor
                     'will be removed in 3.0. Instead, pass wither an integer representing the max value or an array '.
                     'representing the minimum and maximum values.', E_USER_DEPRECATED);
 
-                $quality = array_map(function ($q) {
-                    return (int) $q;
-                }, explode('-', $quality));
+                $quality = array_map(fn($q) => (int) $q, explode('-', $quality));
             }
 
             if (!\is_array($quality)) {

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class FlysystemResolverFactory extends AbstractResolverFactory
 {
-    public function create(ContainerBuilder $container, $resolverName, array $config)
+    public function create(ContainerBuilder $container, $resolverName, array $config): string
     {
         $resolverDefinition = $this->getChildResolverDefinition($this->getChildResolverName());
         $resolverDefinition->replaceArgument(0, new Reference($config['filesystem_service']));
@@ -35,12 +35,12 @@ class FlysystemResolverFactory extends AbstractResolverFactory
         return $resolverId;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'flysystem';
     }
 
-    public function addConfiguration(ArrayNodeDefinition $builder)
+    public function addConfiguration(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -62,10 +62,7 @@ class FlysystemResolverFactory extends AbstractResolverFactory
             ->end();
     }
 
-    /**
-     * @return string|null
-     */
-    private function getChildResolverName()
+    private function getChildResolverName(): ?string
     {
         if (interface_exists(FilesystemOperator::class)) {
             return 'flysystem2';

@@ -24,14 +24,11 @@ class WatermarkFilterLoader implements LoaderInterface
     protected $imagine;
 
     /**
-     * @var string
+     * @param string $projectDir
      */
-    protected $projectDir;
-
-    public function __construct(ImagineInterface $imagine, $projectDir)
+    public function __construct(ImagineInterface $imagine, protected $projectDir)
     {
         $this->imagine = $imagine;
-        $this->projectDir = $projectDir;
     }
 
     /**
@@ -121,7 +118,6 @@ class WatermarkFilterLoader implements LoaderInterface
                 break;
             default:
                 throw new \InvalidArgumentException("Unexpected position '{$options['position']}'");
-                break;
         }
 
         return $image->paste($watermark, new Point($x, $y));

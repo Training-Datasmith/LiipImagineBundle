@@ -28,27 +28,15 @@ use Liip\ImagineBundle\Service\FilterService;
 final class ResolveCacheProcessor implements Processor, CommandSubscriberInterface, QueueSubscriberInterface
 {
     /**
-     * @var FilterManager
-     */
-    private $filterManager;
-
-    /**
-     * @var FilterService
-     */
-    private $filterService;
-
-    /**
      * @var ProducerInterface
      */
     private $producer;
 
     public function __construct(
-        FilterManager $filterManager,
-        FilterService $filterService,
+        private FilterManager $filterManager,
+        private FilterService $filterService,
         ProducerInterface $producer
     ) {
-        $this->filterManager = $filterManager;
-        $this->filterService = $filterService;
         $this->producer = $producer;
     }
 

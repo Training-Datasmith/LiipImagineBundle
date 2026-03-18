@@ -16,13 +16,6 @@ use Liip\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
 class StreamLoader implements LoaderInterface
 {
     /**
-     * The wrapper prefix to append to the path to be loaded.
-     *
-     * @var string
-     */
-    protected $wrapperPrefix;
-
-    /**
      * A stream context resource to use.
      *
      * @var resource|null
@@ -35,10 +28,11 @@ class StreamLoader implements LoaderInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($wrapperPrefix, $context = null)
+    public function __construct(/**
+     * The wrapper prefix to append to the path to be loaded.
+     */
+    protected $wrapperPrefix, $context = null)
     {
-        $this->wrapperPrefix = $wrapperPrefix;
-
         if ($context && !\is_resource($context)) {
             throw new \InvalidArgumentException('The given context is no valid resource.');
         }
@@ -46,7 +40,7 @@ class StreamLoader implements LoaderInterface
         $this->context = empty($context) ? null : $context;
     }
 
-    public function find($path)
+    public function find($path): string
     {
         $name = $this->wrapperPrefix.$path;
 

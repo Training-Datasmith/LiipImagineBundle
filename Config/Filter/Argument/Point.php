@@ -16,20 +16,17 @@ namespace Liip\ImagineBundle\Config\Filter\Argument;
  */
 final class Point
 {
-    /**
-     * @var int
-     */
-    private $x;
-
-    /**
-     * @var int
-     */
-    private $y;
-
-    public function __construct(?int $x = null, ?int $y = null)
+    public function __construct(
+        /**
+         * @var int
+         */
+        private ?int $x = null,
+        /**
+         * @var int
+         */
+        private ?int $y = null
+    )
     {
-        $this->x = $x;
-        $this->y = $y;
     }
 
     public function getX(): ?int

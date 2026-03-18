@@ -24,29 +24,9 @@ use Symfony\Component\Mime\MimeTypesInterface;
 class DataManager
 {
     /**
-     * @var MimeTypeGuesserInterface
-     */
-    protected $mimeTypeGuesser;
-
-    /**
      * @var DeprecatedExtensionGuesserInterface|MimeTypesInterface
      */
     protected $extensionGuesser;
-
-    /**
-     * @var FilterConfiguration
-     */
-    protected $filterConfig;
-
-    /**
-     * @var string|null
-     */
-    protected $defaultLoader;
-
-    /**
-     * @var string|null
-     */
-    protected $globalDefaultImage;
 
     /**
      * @var LoaderInterface[]
@@ -59,11 +39,11 @@ class DataManager
      * @param string                                                 $globalDefaultImage
      */
     public function __construct(
-        MimeTypeGuesserInterface $mimeTypeGuesser,
+        protected \Liip\ImagineBundle\Binary\MimeTypeGuesserInterface $mimeTypeGuesser,
         $extensionGuesser,
-        FilterConfiguration $filterConfig,
-        $defaultLoader = null,
-        $globalDefaultImage = null
+        protected \Liip\ImagineBundle\Imagine\Filter\FilterConfiguration $filterConfig,
+        protected $defaultLoader = null,
+        protected $globalDefaultImage = null
     ) {
         if (!$extensionGuesser instanceof MimeTypesInterface && !$extensionGuesser instanceof DeprecatedExtensionGuesserInterface) {
             throw new InvalidArgumentException('$extensionGuesser must be an instance of Symfony\Component\Mime\MimeTypesInterface or Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface');
@@ -72,12 +52,7 @@ class DataManager
         if (interface_exists(MimeTypesInterface::class) && $extensionGuesser instanceof DeprecatedExtensionGuesserInterface) {
             @trigger_error(\sprintf('Passing a %s to "%s()" is deprecated since Symfony 4.3, pass a "%s" instead.', DeprecatedExtensionGuesserInterface::class, __METHOD__, MimeTypesInterface::class), E_USER_DEPRECATED);
         }
-
-        $this->mimeTypeGuesser = $mimeTypeGuesser;
-        $this->filterConfig = $filterConfig;
-        $this->defaultLoader = $defaultLoader;
         $this->extensionGuesser = $extensionGuesser;
-        $this->globalDefaultImage = $globalDefaultImage;
     }
 
     /**
@@ -85,7 +60,7 @@ class DataManager
      *
      * @param string $filter
      */
-    public function addLoader($filter, LoaderInterface $loader)
+    public function addLoader($filter, LoaderInterface $loader): void
     {
         $this->loaders[$filter] = $loader;
     }

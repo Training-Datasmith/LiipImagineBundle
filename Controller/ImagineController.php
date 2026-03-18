@@ -27,36 +27,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ImagineController
 {
-    /**
-     * @var FilterService
-     */
-    private $filterService;
-
-    /**
-     * @var DataManager
-     */
-    private $dataManager;
-
-    /**
-     * @var SignerInterface
-     */
-    private $signer;
-
-    /**
-     * @var ControllerConfig
-     */
-    private $controllerConfig;
+    private \Liip\ImagineBundle\Config\Controller\ControllerConfig $controllerConfig;
 
     public function __construct(
-        FilterService $filterService,
-        DataManager $dataManager,
-        SignerInterface $signer,
+        private FilterService $filterService,
+        private DataManager $dataManager,
+        private SignerInterface $signer,
         ?ControllerConfig $controllerConfig = null
     ) {
-        $this->filterService = $filterService;
-        $this->dataManager = $dataManager;
-        $this->signer = $signer;
-
         if (null === $controllerConfig) {
             @trigger_error(\sprintf(
                 'Instantiating "%s" without a forth argument of type "%s" is deprecated since 2.2.0 and will be required in 3.0.', self::class, ControllerConfig::class
@@ -74,27 +52,23 @@ class ImagineController
      * filter and storing the image again.
      *
      * @param string $path
-     * @param string $filter
      *
      * @throws RuntimeException
      * @throws NotFoundHttpException
      *
-     * @return RedirectResponse
      */
-    public function filterAction(Request $request, $path, $filter)
+    public function filterAction(Request $request, $path, string $filter): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $path = PathHelper::urlPathToFilePath($path);
         // TODO once we limit `symfony/http-foundation` to 6.4 or newer, use `$request->query->getString()`
         $resolver = $request->query->has('resolver') ? (string) $request->query->get('resolver') : null;
 
-        return $this->createRedirectResponse(function () use ($path, $filter, $resolver, $request) {
-            return $this->filterService->getUrlOfFilteredImage(
-                $path,
-                $filter,
-                $resolver,
-                $this->isWebpSupported($request)
-            );
-        }, $path, $filter);
+        return $this->createRedirectResponse(fn() => $this->filterService->getUrlOfFilteredImage(
+            $path,
+            $filter,
+            $resolver,
+            $this->isWebpSupported($request)
+        ), $path, $filter);
     }
 
     /**
@@ -106,15 +80,13 @@ class ImagineController
      *
      * @param string $hash
      * @param string $path
-     * @param string $filter
      *
      * @throws RuntimeException
      * @throws BadRequestHttpException
      * @throws NotFoundHttpException
      *
-     * @return RedirectResponse
      */
-    public function filterRuntimeAction(Request $request, $hash, $path, $filter)
+    public function filterRuntimeAction(Request $request, $hash, $path, string $filter): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $resolver = $request->query->has('resolver') ? (string) $request->query->get('resolver') : null;
         $path = PathHelper::urlPathToFilePath($path);
@@ -124,22 +96,20 @@ class ImagineController
             throw new BadRequestHttpException(\sprintf('Signed url does not pass the sign check for path "%s" and filter "%s" and runtime config %s', $path, $filter, json_encode($runtimeConfig)));
         }
 
-        return $this->createRedirectResponse(function () use ($path, $filter, $runtimeConfig, $resolver, $request) {
-            return $this->filterService->getUrlOfFilteredImageWithRuntimeFilters(
-                $path,
-                $filter,
-                $runtimeConfig,
-                $resolver,
-                $this->isWebpSupported($request)
-            );
-        }, $path, $filter, $hash);
+        return $this->createRedirectResponse(fn() => $this->filterService->getUrlOfFilteredImageWithRuntimeFilters(
+            $path,
+            $filter,
+            $runtimeConfig,
+            $resolver,
+            $this->isWebpSupported($request)
+        ), $path, $filter, $hash);
     }
 
     private function getFiltersBc(Request $request): array
     {
         try {
             return $request->query->all('filters');
-        } catch (BadRequestException $e) {
+        } catch (BadRequestException) {
             // for strict BC - BadRequestException seems more suited to this situation.
             // remove the try-catch in version 3
             throw new NotFoundHttpException(\sprintf('Filters must be an array. Value was "%s"', $request->query->get('filters')));

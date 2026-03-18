@@ -21,22 +21,10 @@ final class Scale extends FilterAbstract
     public const NAME = 'scale';
 
     /**
-     * @var Size
-     */
-    private $dimensions;
-
-    /**
-     * @var float
-     */
-    private $to;
-
-    /**
      * @param float|null $to proportional scale operation computed by multiplying all image sides by this value
      */
-    public function __construct(Size $dimensions, ?float $to = null)
+    public function __construct(private Size $dimensions, private ?float $to = null)
     {
-        $this->dimensions = $dimensions;
-        $this->to = $to;
     }
 
     public function getDimensions(): Size

@@ -19,25 +19,10 @@ use Symfony\Component\Process\Process;
 
 abstract class AbstractPostProcessor implements PostProcessorInterface
 {
-    /**
-     * @var string
-     */
-    protected $executablePath;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
-    /**
-     * @var string|null
-     */
-    protected $temporaryRootPath;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    public function __construct(string $executablePath, ?string $temporaryRootPath = null)
+    public function __construct(protected string $executablePath, protected ?string $temporaryRootPath = null)
     {
-        $this->executablePath = $executablePath;
-        $this->temporaryRootPath = $temporaryRootPath;
         $this->filesystem = new Filesystem();
     }
 
@@ -99,7 +84,7 @@ abstract class AbstractPostProcessor implements PostProcessorInterface
         if (!is_dir($root)) {
             try {
                 $this->filesystem->mkdir($root);
-            } catch (IOException $exception) {
+            } catch (IOException) {
                 // ignore failure as "tempnam" function will revert back to system default tmp path as last resort
             }
         }

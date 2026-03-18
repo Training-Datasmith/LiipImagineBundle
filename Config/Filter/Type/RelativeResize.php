@@ -18,36 +18,25 @@ final class RelativeResize extends FilterAbstract
 {
     public const NAME = 'relative_resize';
 
-    /**
-     * @var float
-     */
-    private $heighten;
-
-    /**
-     * @var float
-     */
-    private $widen;
-
-    /**
-     * @var float
-     */
-    private $increase;
-
-    /**
-     * @var float
-     */
-    private $scale;
-
     public function __construct(
-        ?float $heighten = null,
-        ?float $widen = null,
-        ?float $increase = null,
-        ?float $scale = null
-    ) {
-        $this->heighten = $heighten;
-        $this->widen = $widen;
-        $this->increase = $increase;
-        $this->scale = $scale;
+        /**
+         * @var float
+         */
+        private ?float $heighten = null,
+        /**
+         * @var float
+         */
+        private ?float $widen = null,
+        /**
+         * @var float
+         */
+        private ?float $increase = null,
+        /**
+         * @var float
+         */
+        private ?float $scale = null
+    )
+    {
     }
 
     public function getHeighten(): ?float

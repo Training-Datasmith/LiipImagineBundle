@@ -25,11 +25,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEvent
 class CacheManager
 {
     /**
-     * @var FilterConfiguration
-     */
-    protected $filterConfig;
-
-    /**
      * @var RouterInterface
      */
     protected $router;
@@ -40,24 +35,9 @@ class CacheManager
     protected $resolvers = [];
 
     /**
-     * @var SignerInterface
-     */
-    protected $signer;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
      * @var string
      */
     protected $defaultResolver;
-
-    /**
-     * @var bool
-     */
-    private $webpGenerate;
 
     /**
      * Constructs the cache manager to handle Resolvers based on the provided FilterConfiguration.
@@ -66,19 +46,15 @@ class CacheManager
      * @param bool   $webpGenerate
      */
     public function __construct(
-        FilterConfiguration $filterConfig,
+        protected \Liip\ImagineBundle\Imagine\Filter\FilterConfiguration $filterConfig,
         RouterInterface $router,
-        SignerInterface $signer,
-        EventDispatcherInterface $dispatcher,
+        protected \Liip\ImagineBundle\Imagine\Cache\SignerInterface $signer,
+        protected \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher,
         $defaultResolver = null,
-        $webpGenerate = false
+        private $webpGenerate = false
     ) {
-        $this->filterConfig = $filterConfig;
         $this->router = $router;
-        $this->signer = $signer;
-        $this->dispatcher = $dispatcher;
         $this->defaultResolver = $defaultResolver ?: 'default';
-        $this->webpGenerate = $webpGenerate;
     }
 
     /**
@@ -86,7 +62,7 @@ class CacheManager
      *
      * @param string $filter
      */
-    public function addResolver($filter, ResolverInterface $resolver)
+    public function addResolver($filter, ResolverInterface $resolver): void
     {
         $this->resolvers[$filter] = $resolver;
 
@@ -125,10 +101,8 @@ class CacheManager
      * Get path to runtime config image.
      *
      * @param string $path
-     *
-     * @return string
      */
-    public function getRuntimePath($path, array $runtimeConfig)
+    public function getRuntimePath($path, array $runtimeConfig): string
     {
         $path = ltrim($path, '/');
 
@@ -157,15 +131,12 @@ class CacheManager
         }
 
         if (empty($runtimeConfig)) {
-            $filterUrl = $this->router->generate('liip_imagine_filter', $params, $referenceType);
-        } else {
-            $params['filters'] = $runtimeConfig;
-            $params['hash'] = $this->signer->sign($path, $runtimeConfig);
-
-            $filterUrl = $this->router->generate('liip_imagine_filter_runtime', $params, $referenceType);
+            return $this->router->generate('liip_imagine_filter', $params, $referenceType);
         }
+        $params['filters'] = $runtimeConfig;
+        $params['hash'] = $this->signer->sign($path, $runtimeConfig);
 
-        return $filterUrl;
+        return $this->router->generate('liip_imagine_filter_runtime', $params, $referenceType);
     }
 
     /**
@@ -217,7 +188,7 @@ class CacheManager
      * @param string $filter
      * @param string $resolver
      */
-    public function store(BinaryInterface $binary, $path, $filter, $resolver = null)
+    public function store(BinaryInterface $binary, $path, $filter, $resolver = null): void
     {
         $this->getResolver($filter, $resolver)->store($binary, $path, $filter);
     }
@@ -226,7 +197,7 @@ class CacheManager
      * @param string|string[]|null $paths
      * @param string|string[]|null $filters
      */
-    public function remove($paths = null, $filters = null)
+    public function remove($paths = null, $filters = null): void
     {
         if (null === $filters) {
             $filters = array_keys($this->filterConfig->all());
@@ -244,7 +215,7 @@ class CacheManager
         foreach ($filters as $filter) {
             $resolver = $this->getResolver($filter, null);
 
-            $list = isset($mapping[$resolver]) ? $mapping[$resolver] : [];
+            $list = $mapping[$resolver] ?? [];
 
             $list[] = $filter;
 

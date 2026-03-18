@@ -23,14 +23,11 @@ class PasteFilterLoader implements LoaderInterface
     protected $imagine;
 
     /**
-     * @var string
+     * @param string $projectDir
      */
-    protected $projectDir;
-
-    public function __construct(ImagineInterface $imagine, $projectDir)
+    public function __construct(ImagineInterface $imagine, protected $projectDir)
     {
         $this->imagine = $imagine;
-        $this->projectDir = $projectDir;
     }
 
     /**
@@ -40,8 +37,8 @@ class PasteFilterLoader implements LoaderInterface
      */
     public function load(ImageInterface $image, array $options = [])
     {
-        $x = isset($options['start'][0]) ? $options['start'][0] : null;
-        $y = isset($options['start'][1]) ? $options['start'][1] : null;
+        $x = $options['start'][0] ?? null;
+        $y = $options['start'][1] ?? null;
 
         $destImage = $this->imagine->open($this->projectDir.'/'.$options['image']);
 

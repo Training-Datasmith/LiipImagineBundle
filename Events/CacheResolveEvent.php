@@ -29,23 +29,7 @@ if (is_subclass_of(EventDispatcherInterface::class, ContractsEventDispatcherInte
 class CacheResolveEvent extends BCEvent
 {
     /**
-     * Resource path.
-     *
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * Filter name.
-     *
-     * @var string
-     */
-    protected $filter;
-
-    /**
      * Resource url.
-     *
-     * @var null
      */
     protected $url;
 
@@ -56,17 +40,21 @@ class CacheResolveEvent extends BCEvent
      * @param string      $filter
      * @param string|null $url
      */
-    public function __construct($path, $filter, $url = null)
+    public function __construct(/**
+     * Resource path.
+     */
+    protected $path, /**
+     * Filter name.
+     */
+    protected $filter, $url = null)
     {
-        $this->path = $path;
-        $this->filter = $filter;
         $this->url = $url;
     }
 
     /**
      * Sets resource path.
      */
-    public function setPath($path)
+    public function setPath($path): void
     {
         $this->path = $path;
     }
@@ -84,7 +72,7 @@ class CacheResolveEvent extends BCEvent
     /**
      * Sets filter name.
      */
-    public function setFilter($filter)
+    public function setFilter($filter): void
     {
         $this->filter = $filter;
     }
@@ -102,7 +90,7 @@ class CacheResolveEvent extends BCEvent
     /**
      * Sets resource url.
      */
-    public function setUrl($url)
+    public function setUrl($url): void
     {
         $this->url = $url;
     }

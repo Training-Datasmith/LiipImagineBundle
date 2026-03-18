@@ -23,15 +23,7 @@ class CacheResolver implements ResolverInterface
      */
     protected $cache;
 
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var ResolverInterface
-     */
-    protected $resolver;
+    protected array $options;
 
     /**
      * Constructor.
@@ -44,10 +36,9 @@ class CacheResolver implements ResolverInterface
      * * index_key
      *   The name of the index key being used to save a list of created cache keys regarding one image and filter pairing.
      */
-    public function __construct(Cache $cache, ResolverInterface $cacheResolver, array $options = [], ?OptionsResolver $optionsResolver = null)
+    public function __construct(Cache $cache, protected \Liip\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface $resolver, array $options = [], ?OptionsResolver $optionsResolver = null)
     {
         $this->cache = $cache;
-        $this->resolver = $cacheResolver;
 
         if (null === $optionsResolver) {
             $optionsResolver = new OptionsResolver();
@@ -57,13 +48,13 @@ class CacheResolver implements ResolverInterface
         $this->options = $optionsResolver->resolve($options);
     }
 
-    public function isStored($path, $filter)
+    public function isStored($path, $filter): bool
     {
         $cacheKey = $this->generateCacheKey($path, $filter);
-
-        return
-            $this->cache->contains($cacheKey)
-            || $this->resolver->isStored($path, $filter);
+        if ($this->cache->contains($cacheKey)) {
+            return true;
+        }
+        return $this->resolver->isStored($path, $filter);
     }
 
     public function resolve($path, $filter)
@@ -80,12 +71,12 @@ class CacheResolver implements ResolverInterface
         return $resolved;
     }
 
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, $path, $filter): void
     {
         $this->resolver->store($binary, $path, $filter);
     }
 
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $filters): void
     {
         $this->resolver->remove($paths, $filters);
 
@@ -107,10 +98,8 @@ class CacheResolver implements ResolverInterface
      *
      * @param string $path   The image path in use
      * @param string $filter The filter in use
-     *
-     * @return string
      */
-    public function generateCacheKey($path, $filter)
+    public function generateCacheKey($path, $filter): string
     {
         return implode('.', [
             $this->sanitizeCacheKeyPart($this->options['global_prefix']),
@@ -156,10 +145,8 @@ class CacheResolver implements ResolverInterface
      * The index contains a list of cache keys related to an image and a filter.
      *
      * @param string $cacheKey
-     *
-     * @return string
      */
-    protected function generateIndexKey($cacheKey)
+    protected function generateIndexKey($cacheKey): string
     {
         $cacheKeyStack = explode('.', $cacheKey);
 
@@ -173,10 +160,8 @@ class CacheResolver implements ResolverInterface
 
     /**
      * @param string $cacheKeyPart
-     *
-     * @return string
      */
-    protected function sanitizeCacheKeyPart($cacheKeyPart)
+    protected function sanitizeCacheKeyPart($cacheKeyPart): string
     {
         if (null === $cacheKeyPart) {
             return '';
@@ -223,7 +208,7 @@ class CacheResolver implements ResolverInterface
     {
         $resolver->setDefaults([
             'global_prefix' => 'liip_imagine.resolver_cache',
-            'prefix' => \get_class($this->resolver),
+            'prefix' => $this->resolver::class,
             'index_key' => 'index',
         ]);
 

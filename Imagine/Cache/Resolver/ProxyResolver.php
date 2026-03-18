@@ -21,24 +21,10 @@ use Liip\ImagineBundle\Binary\BinaryInterface;
 class ProxyResolver implements ResolverInterface
 {
     /**
-     * @var ResolverInterface
-     */
-    protected $resolver;
-
-    /**
-     * a list of proxy hosts (picks a random one for each generation to seed browser requests among multiple hosts).
-     *
-     * @var array
-     */
-    protected $hosts = [];
-
-    /**
      * @param string[] $hosts
      */
-    public function __construct(ResolverInterface $resolver, array $hosts)
+    public function __construct(protected \Liip\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface $resolver, protected array $hosts)
     {
-        $this->resolver = $resolver;
-        $this->hosts = $hosts;
     }
 
     public function resolve($path, $filter)

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class WebPathResolverFactory extends AbstractResolverFactory
 {
-    public function create(ContainerBuilder $container, $resolverName, array $config)
+    public function create(ContainerBuilder $container, $resolverName, array $config): string
     {
         $resolverDefinition = $this->getChildResolverDefinition();
         $resolverDefinition->replaceArgument(2, $config['web_root']);
@@ -32,12 +32,12 @@ class WebPathResolverFactory extends AbstractResolverFactory
         return $resolverId;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'web_path';
     }
 
-    public function addConfiguration(ArrayNodeDefinition $builder)
+    public function addConfiguration(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()

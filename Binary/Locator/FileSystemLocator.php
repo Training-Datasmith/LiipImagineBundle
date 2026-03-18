@@ -19,16 +19,14 @@ class FileSystemLocator implements LocatorInterface
     /**
      * @var string[]
      */
-    private $roots = [];
+    private array $roots;
 
     /**
      * @param string[] $roots
      */
     public function __construct(array $roots = [], bool $allowUnresolvable = false)
     {
-        $this->roots = array_filter(array_map(function (string $root) use ($allowUnresolvable): ?string {
-            return $this->sanitizeRootPath($root, $allowUnresolvable);
-        }, $roots));
+        $this->roots = array_filter(array_map(fn(string $root): ?string => $this->sanitizeRootPath($root, $allowUnresolvable), $roots));
     }
 
     /**
@@ -101,9 +99,7 @@ class FileSystemLocator implements LocatorInterface
      */
     private function sanitizeAbsolutePath(string $path): string
     {
-        $roots = array_filter($this->roots, function (string $root) use ($path): bool {
-            return 0 === mb_strpos($path, $root);
-        });
+        $roots = array_filter($this->roots, fn(string $root): bool => 0 === mb_strpos($path, $root));
 
         if (0 === \count($roots)) {
             throw new NotLoadableException(\sprintf('Source image invalid "%s" as it is outside of the defined root path(s) "%s"', $path, implode(':', $this->roots)));

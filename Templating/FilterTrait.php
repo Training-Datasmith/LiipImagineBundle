@@ -64,10 +64,7 @@ trait FilterTrait
         return $this->cache->resolve($path, $filter, $resolver);
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return 'liip_imagine';
     }

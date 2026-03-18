@@ -18,23 +18,11 @@ use Liip\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
 abstract class AbstractDoctrineLoader implements LoaderInterface
 {
     /**
-     * @var ObjectManager|LegacyObjectManager
-     */
-    protected $manager;
-
-    /**
-     * @var string
-     */
-    protected $class;
-
-    /**
      * @param ObjectManager|LegacyObjectManager $manager
      * @param string                            $class
      */
-    public function __construct($manager, $class = null)
+    public function __construct(protected $manager, protected $class = null)
     {
-        $this->manager = $manager;
-        $this->class = $class;
     }
 
     public function find($path)

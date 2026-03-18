@@ -21,20 +21,8 @@ final class Crop extends FilterAbstract
 {
     public const NAME = 'crop';
 
-    /**
-     * @var Point
-     */
-    private $startPoint;
-
-    /**
-     * @var Size
-     */
-    private $size;
-
-    public function __construct(Point $startPoint, Size $size)
+    public function __construct(private Point $startPoint, private Size $size)
     {
-        $this->startPoint = $startPoint;
-        $this->size = $size;
     }
 
     public function getStartPoint(): Point

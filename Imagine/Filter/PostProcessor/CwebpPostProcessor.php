@@ -18,77 +18,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class CwebpPostProcessor extends AbstractPostProcessor
 {
-    /**
-     * Specify the compression factor for RGB channels between **0** and **100**. The default is **75**.
-     *
-     * In case of lossy compression , a small factor produces a smaller file with lower quality. Best quality is
-     * achieved by using a value of **100**.
-     *
-     * In case of lossless compression (specified by the **-lossless** option), a small factor enables faster
-     * compression speed, but produces a larger file. Maximum compression is achieved by using a value of **100**.
-     *
-     * @var int
-     */
-    protected $q;
-
-    /**
-     * Specify the compression factor for alpha compression between **0** and **100**. Lossless compression of alpha is
-     * achieved using a value of **100**, while the lower values result in a lossy compression.
-     *
-     * @var int
-     */
-    protected $alphaQ;
-
-    /**
-     * Specify the compression method to use. This parameter controls the trade off between encoding speed and the
-     * compressed file size and quality. Possible values range from **0** to **6**. When higher values are used, the
-     * encoder will spend more time inspecting additional encoding possibilities and decide on the quality gain. Lower
-     * value can result in faster processing time at the expense of larger file size and lower compression quality.
-     *
-     * @var int
-     */
-    protected $m;
-
-    /**
-     * Specify the predictive filtering method for the alpha plane. One of **none**, **fast** or **best**, in
-     * increasing complexity and slowness order. Internally, alpha filtering is performed using four possible
-     * predictions (none, horizontal, vertical, gradient). The **best** mode will try each mode in turn and pick the
-     * one which gives the smaller size. The **fast** mode will just try to form an a priori guess without testing all
-     * modes.
-     *
-     * @var string
-     */
-    protected $alphaFilter;
-
-    /**
-     * Specify the algorithm used for alpha compression: **0** or **1**. Algorithm **0** denotes no compression, **1**
-     * uses WebP lossless format for compression.
-     *
-     * @var int
-     */
-    protected $alphaMethod;
-
-    /**
-     * Preserve RGB values in transparent area. The default is off, to help compressibility.
-     *
-     * @var bool
-     */
-    protected $exact;
-
-    /**
-     * An array of metadata to copy from the input to the output if present. Valid values: **all**, **none**, **exif**,
-     * **icc**, **xmp**.
-     *
-     * Note that each input format may not support all combinations.
-     *
-     * @var string[]
-     */
-    protected $metadata;
-
-    /**
-     * @var OptionsResolver
-     */
-    private $resolver;
+    private \Symfony\Component\OptionsResolver\OptionsResolver $resolver;
 
     /**
      * @param string[] $metadata
@@ -96,23 +26,54 @@ class CwebpPostProcessor extends AbstractPostProcessor
     public function __construct(
         string $executablePath = '/usr/bin/cwebp',
         ?string $temporaryRootPath = null,
-        ?int $q = null,
-        ?int $alphaQ = null,
-        ?int $m = null,
-        ?string $alphaFilter = null,
-        ?int $alphaMethod = null,
-        ?bool $exact = null,
-        array $metadata = []
+        /**
+         * Specify the compression factor for RGB channels between **0** and **100**. The default is **75**.
+         *
+         * In case of lossy compression , a small factor produces a smaller file with lower quality. Best quality is
+         * achieved by using a value of **100**.
+         *
+         * In case of lossless compression (specified by the **-lossless** option), a small factor enables faster
+         * compression speed, but produces a larger file. Maximum compression is achieved by using a value of **100**.
+         */
+        protected ?int $q = null,
+        /**
+         * Specify the compression factor for alpha compression between **0** and **100**. Lossless compression of alpha is
+         * achieved using a value of **100**, while the lower values result in a lossy compression.
+         */
+        protected ?int $alphaQ = null,
+        /**
+         * Specify the compression method to use. This parameter controls the trade off between encoding speed and the
+         * compressed file size and quality. Possible values range from **0** to **6**. When higher values are used, the
+         * encoder will spend more time inspecting additional encoding possibilities and decide on the quality gain. Lower
+         * value can result in faster processing time at the expense of larger file size and lower compression quality.
+         */
+        protected ?int $m = null,
+        /**
+         * Specify the predictive filtering method for the alpha plane. One of **none**, **fast** or **best**, in
+         * increasing complexity and slowness order. Internally, alpha filtering is performed using four possible
+         * predictions (none, horizontal, vertical, gradient). The **best** mode will try each mode in turn and pick the
+         * one which gives the smaller size. The **fast** mode will just try to form an a priori guess without testing all
+         * modes.
+         */
+        protected ?string $alphaFilter = null,
+        /**
+         * Specify the algorithm used for alpha compression: **0** or **1**. Algorithm **0** denotes no compression, **1**
+         * uses WebP lossless format for compression.
+         */
+        protected ?int $alphaMethod = null,
+        /**
+         * Preserve RGB values in transparent area. The default is off, to help compressibility.
+         */
+        protected ?bool $exact = null,
+        /**
+         * An array of metadata to copy from the input to the output if present. Valid values: **all**, **none**, **exif**,
+         * **icc**, **xmp**.
+         *
+         * Note that each input format may not support all combinations.
+         */
+        protected array $metadata = []
     ) {
         parent::__construct($executablePath, $temporaryRootPath);
-
-        $this->q = $q;
-        $this->alphaQ = $alphaQ;
-        $this->m = $m;
-        $this->alphaFilter = $alphaFilter;
-        $this->alphaMethod = $alphaMethod;
-        $this->exact = $exact;
-        $this->metadata = $metadata;
         $this->resolver = new OptionsResolver();
 
         $this->configureOptions($this->resolver);
@@ -156,7 +117,7 @@ class CwebpPostProcessor extends AbstractPostProcessor
         $resolver
             ->setDefault('q', $this->q)
             ->setAllowedTypes('q', ['null', 'int'])
-            ->setAllowedValues('q', static function ($value) {
+            ->setAllowedValues('q', static function ($value): bool {
                 if (null === $value) {
                     return true;
                 }
@@ -167,7 +128,7 @@ class CwebpPostProcessor extends AbstractPostProcessor
         $resolver
             ->setDefault('alphaQ', $this->alphaQ)
             ->setAllowedTypes('alphaQ', ['null', 'int'])
-            ->setAllowedValues('alphaQ', static function ($value) {
+            ->setAllowedValues('alphaQ', static function ($value): bool {
                 if (null === $value) {
                     return true;
                 }
@@ -178,7 +139,7 @@ class CwebpPostProcessor extends AbstractPostProcessor
         $resolver
             ->setDefault('m', $this->m)
             ->setAllowedTypes('m', ['null', 'int'])
-            ->setAllowedValues('m', static function ($value) {
+            ->setAllowedValues('m', static function ($value): bool {
                 if (null === $value) {
                     return true;
                 }
@@ -203,7 +164,7 @@ class CwebpPostProcessor extends AbstractPostProcessor
         $resolver
             ->setDefault('metadata', $this->metadata)
             ->setAllowedTypes('metadata', ['null', 'array'])
-            ->setAllowedValues('metadata', static function ($value) {
+            ->setAllowedValues('metadata', static function ($value): bool {
                 if (null === $value) {
                     return true;
                 }

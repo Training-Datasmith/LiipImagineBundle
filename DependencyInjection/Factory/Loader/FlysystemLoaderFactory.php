@@ -32,12 +32,12 @@ class FlysystemLoaderFactory extends AbstractLoaderFactory
         return $this->setTaggedLoaderDefinition($loaderName, $definition, $container);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'flysystem';
     }
 
-    public function addConfiguration(ArrayNodeDefinition $builder)
+    public function addConfiguration(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -48,10 +48,7 @@ class FlysystemLoaderFactory extends AbstractLoaderFactory
             ->end();
     }
 
-    /**
-     * @return string|null
-     */
-    private function getChildLoaderName()
+    private function getChildLoaderName(): ?string
     {
         if (interface_exists(FilesystemOperator::class)) {
             return 'flysystem2';

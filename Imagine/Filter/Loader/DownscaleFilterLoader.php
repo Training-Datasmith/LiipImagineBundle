@@ -23,12 +23,12 @@ class DownscaleFilterLoader extends ScaleFilterLoader
         parent::__construct('max', 'by', false);
     }
 
-    protected function calcAbsoluteRatio($ratio)
+    protected function calcAbsoluteRatio($ratio): int|float
     {
         return 1 - ($ratio > 1 ? $ratio - floor($ratio) : $ratio);
     }
 
-    protected function isImageProcessable($ratio)
+    protected function isImageProcessable($ratio): bool
     {
         return $ratio < 1;
     }

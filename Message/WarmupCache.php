@@ -21,29 +21,11 @@ namespace Liip\ImagineBundle\Message;
 class WarmupCache
 {
     /**
-     * @var string
-     */
-    private $path;
-
-    /**
-     * @var string[]|null
-     */
-    private $filters;
-
-    /**
-     * @var bool
-     */
-    private $force;
-
-    /**
      * @param string[]|null $filters List of filter set names to warm up. If not set, all available filter sets are warmed up
      * @param bool          $force   Whether to recreate existing cached images or only create them when no cache currently exists
      */
-    public function __construct(string $path, ?array $filters = null, bool $force = false)
+    public function __construct(private string $path, private ?array $filters = null, private bool $force = false)
     {
-        $this->path = $path;
-        $this->filters = $filters;
-        $this->force = $force;
     }
 
     public function getPath(): string

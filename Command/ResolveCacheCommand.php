@@ -24,18 +24,12 @@ class ResolveCacheCommand extends Command
 {
     use CacheCommandTrait;
 
-    /**
-     * @var FilterService
-     */
-    private $filterService;
-
-    public function __construct(CacheManager $cacheManager, FilterManager $filterManager, FilterService $filterService)
+    public function __construct(CacheManager $cacheManager, FilterManager $filterManager, private FilterService $filterService)
     {
         parent::__construct();
 
         $this->cacheManager = $cacheManager;
         $this->filterManager = $filterManager;
-        $this->filterService = $filterService;
     }
 
     protected function configure(): void

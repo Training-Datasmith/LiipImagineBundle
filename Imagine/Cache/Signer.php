@@ -14,22 +14,16 @@ namespace Liip\ImagineBundle\Imagine\Cache;
 class Signer implements SignerInterface
 {
     /**
-     * @var string
-     */
-    private $secret;
-
-    /**
      * @param string $secret
      */
-    public function __construct($secret)
+    public function __construct(private $secret)
     {
-        $this->secret = $secret;
     }
 
-    public function sign($path, ?array $runtimeConfig = null)
+    public function sign($path, ?array $runtimeConfig = null): string
     {
         if ($runtimeConfig) {
-            array_walk_recursive($runtimeConfig, function (&$value) {
+            array_walk_recursive($runtimeConfig, function (&$value): void {
                 $value = (string) $value;
             });
         }
@@ -37,7 +31,7 @@ class Signer implements SignerInterface
         return mb_substr(preg_replace('/[^a-zA-Z0-9-_]/', '', base64_encode(hash_hmac('sha256', ltrim($path, '/').(null === $runtimeConfig ?: serialize($runtimeConfig)), $this->secret, true))), 0, 8);
     }
 
-    public function check($hash, $path, ?array $runtimeConfig = null)
+    public function check($hash, $path, ?array $runtimeConfig = null): bool
     {
         return $hash === $this->sign($path, $runtimeConfig);
     }

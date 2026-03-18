@@ -18,14 +18,8 @@ final class Rotate extends FilterAbstract
 {
     public const NAME = 'rotate';
 
-    /**
-     * @var int
-     */
-    private $angle;
-
-    public function __construct(int $angle)
+    public function __construct(private int $angle)
     {
-        $this->angle = $angle;
     }
 
     public function getAngle(): int

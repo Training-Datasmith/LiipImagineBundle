@@ -16,20 +16,8 @@ use Liip\ImagineBundle\Imagine\Filter\FilterConfiguration;
 
 class FormatExtensionResolver implements ResolverInterface
 {
-    /**
-     * @var ResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var FilterConfiguration
-     */
-    private $filterConfig;
-
-    public function __construct(ResolverInterface $resolver, FilterConfiguration $filterConfig)
+    public function __construct(private ResolverInterface $resolver, private FilterConfiguration $filterConfig)
     {
-        $this->resolver = $resolver;
-        $this->filterConfig = $filterConfig;
     }
 
     public function resolve($path, $filter)
@@ -76,8 +64,7 @@ class FormatExtensionResolver implements ResolverInterface
         }
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $path = ($extension ? mb_substr($path, 0, -mb_strlen($extension)) : $path.'.').$config['format'];
 
-        return $path;
+        return ($extension ? mb_substr($path, 0, -mb_strlen($extension)) : $path.'.').$config['format'];
     }
 }

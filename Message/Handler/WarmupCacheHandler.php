@@ -22,16 +22,8 @@ use Liip\ImagineBundle\Service\FilterService;
  */
 class WarmupCacheHandler
 {
-    /** @var FilterManager */
-    private $filterManager;
-
-    /** @var FilterService */
-    private $filterService;
-
-    public function __construct(FilterManager $filterManager, FilterService $filterService)
+    public function __construct(private FilterManager $filterManager, private FilterService $filterService)
     {
-        $this->filterManager = $filterManager;
-        $this->filterService = $filterService;
     }
 
     public function __invoke(WarmupCache $message): void

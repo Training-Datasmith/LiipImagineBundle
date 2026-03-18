@@ -19,31 +19,20 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class OptiPngPostProcessor extends AbstractPostProcessor
 {
     /**
-     * If set --oN will be passed to optipng.
-     *
-     * @var int
-     */
-    protected $level;
-
-    /**
-     * If set --strip=all will be passed to optipng.
-     *
-     * @var bool
-     */
-    protected $strip;
-
-    /**
      * @param string $executablePath    Path to the optipng binary
      * @param int    $level             Optimization level
      * @param bool   $strip             Strip metadata objects
      * @param string $temporaryRootPath Directory where temporary file will be written
      */
-    public function __construct($executablePath = '/usr/bin/optipng', $level = 7, $strip = true, $temporaryRootPath = null)
+    public function __construct(string $executablePath = '/usr/bin/optipng', /**
+     * If set --oN will be passed to optipng.
+     */
+    protected $level = 7, /**
+     * If set --strip=all will be passed to optipng.
+     */
+    protected $strip = true, ?string $temporaryRootPath = null)
     {
         parent::__construct($executablePath, $temporaryRootPath);
-
-        $this->level = $level;
-        $this->strip = $strip;
     }
 
     /*

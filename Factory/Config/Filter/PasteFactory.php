@@ -23,14 +23,8 @@ use Liip\ImagineBundle\Factory\Config\FilterFactoryInterface;
  */
 final class PasteFactory implements FilterFactoryInterface
 {
-    /**
-     * @var PointFactory
-     */
-    private $pointFactory;
-
-    public function __construct(PointFactory $pointFactory)
+    public function __construct(private PointFactory $pointFactory)
     {
-        $this->pointFactory = $pointFactory;
     }
 
     public function getName(): string

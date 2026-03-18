@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AwsS3ResolverFactory extends AbstractResolverFactory
 {
-    public function create(ContainerBuilder $container, $resolverName, array $config)
+    public function create(ContainerBuilder $container, $resolverName, array $config): string
     {
         $awsS3ClientId = 'liip_imagine.cache.resolver.'.$resolverName.'.client';
 
@@ -82,12 +82,12 @@ class AwsS3ResolverFactory extends AbstractResolverFactory
         return $resolverId;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'aws_s3';
     }
 
-    public function addConfiguration(ArrayNodeDefinition $builder)
+    public function addConfiguration(ArrayNodeDefinition $builder): void
     {
         $builder
             ->children()
@@ -134,18 +134,14 @@ class AwsS3ResolverFactory extends AbstractResolverFactory
                 ->end()
             ->end()
             ->beforeNormalization()
-                ->ifTrue(static function ($v) {
-                    return isset($v['client_id']) && isset($v['client_config']);
-                })
-                ->then(static function ($v) {
+                ->ifTrue(static fn($v) => isset($v['client_id']) && isset($v['client_config']))
+                ->then(static function ($v): void {
                     throw new InvalidConfigurationException('Children config "client_id" and "client_config" cannot be configured at the same time.');
                 })
             ->end()
             ->beforeNormalization()
-                ->ifTrue(static function ($v) {
-                    return isset($v['client_id']);
-                })
-                ->then(function ($config) {
+                ->ifTrue(static fn($v) => isset($v['client_id']))
+                ->then(function (array $config): array {
                     $config['client_config'] = [];
 
                     return $config;

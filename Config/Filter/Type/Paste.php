@@ -20,14 +20,8 @@ final class Paste extends FilterAbstract
 {
     public const NAME = 'paste';
 
-    /**
-     * @var Point
-     */
-    private $start;
-
-    public function __construct(Point $start)
+    public function __construct(private Point $start)
     {
-        $this->start = $start;
     }
 
     public function getStart(): Point

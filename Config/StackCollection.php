@@ -13,22 +13,10 @@ namespace Liip\ImagineBundle\Config;
 
 final class StackCollection
 {
-    private $stacks = [];
+    private array $stacks = [];
 
-    /**
-     * @var StackBuilderInterface
-     */
-    private $stackBuilder;
-
-    /**
-     * @var array
-     */
-    private $filtersConfiguration;
-
-    public function __construct(StackBuilderInterface $stackBuilder, array $filtersConfiguration = [])
+    public function __construct(private StackBuilderInterface $stackBuilder, private array $filtersConfiguration = [])
     {
-        $this->stackBuilder = $stackBuilder;
-        $this->filtersConfiguration = $filtersConfiguration;
     }
 
     /**

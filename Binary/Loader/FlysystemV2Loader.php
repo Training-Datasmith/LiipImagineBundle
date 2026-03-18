@@ -37,7 +37,7 @@ class FlysystemV2Loader implements LoaderInterface
         $this->filesystem = $filesystem;
     }
 
-    public function find($path)
+    public function find($path): \Liip\ImagineBundle\Model\Binary
     {
         try {
             $mimeType = $this->filesystem->mimeType($path);

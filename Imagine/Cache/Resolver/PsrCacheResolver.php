@@ -35,15 +35,7 @@ final class PsrCacheResolver implements ResolverInterface
      */
     private $cache;
 
-    /**
-     * @var array
-     */
-    private $options = [];
-
-    /**
-     * @var ResolverInterface
-     */
-    private $resolver;
+    private array $options;
 
     /**
      * Constructor.
@@ -56,10 +48,9 @@ final class PsrCacheResolver implements ResolverInterface
      * * index_key
      *   The name of the index key being used to save a list of created cache keys regarding one image and filter pairing.
      */
-    public function __construct(CacheItemPoolInterface $cache, ResolverInterface $cacheResolver, array $options = [], ?OptionsResolver $optionsResolver = null)
+    public function __construct(CacheItemPoolInterface $cache, private ResolverInterface $resolver, array $options = [], ?OptionsResolver $optionsResolver = null)
     {
         $this->cache = $cache;
-        $this->resolver = $cacheResolver;
 
         if (null === $optionsResolver) {
             $optionsResolver = new OptionsResolver();
@@ -69,13 +60,13 @@ final class PsrCacheResolver implements ResolverInterface
         $this->options = $optionsResolver->resolve($options);
     }
 
-    public function isStored($path, $filter)
+    public function isStored($path, $filter): bool
     {
         $cacheKey = $this->generateCacheKey($path, $filter);
-
-        return
-            $this->cache->hasItem($cacheKey)
-            || $this->resolver->isStored($path, $filter);
+        if ($this->cache->hasItem($cacheKey)) {
+            return true;
+        }
+        return $this->resolver->isStored($path, $filter);
     }
 
     public function resolve($path, $filter)
@@ -94,12 +85,12 @@ final class PsrCacheResolver implements ResolverInterface
         return $resolved;
     }
 
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, $path, $filter): void
     {
         $this->resolver->store($binary, $path, $filter);
     }
 
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $filters): void
     {
         $this->resolver->remove($paths, $filters);
 
@@ -121,10 +112,8 @@ final class PsrCacheResolver implements ResolverInterface
      *
      * @param string $path   The image path in use
      * @param string $filter The filter in use
-     *
-     * @return string
      */
-    public function generateCacheKey($path, $filter)
+    public function generateCacheKey($path, $filter): string
     {
         return implode('.', [
             $this->sanitizeCacheKeyPart($this->options['global_prefix']),
@@ -134,7 +123,7 @@ final class PsrCacheResolver implements ResolverInterface
         ]);
     }
 
-    private function removePathAndFilter($path, $filter)
+    private function removePathAndFilter($path, $filter): void
     {
         $indexKey = $this->generateIndexKey($this->generateCacheKey($path, $filter));
         $indexItem = $this->cache->getItem($indexKey);
@@ -172,10 +161,8 @@ final class PsrCacheResolver implements ResolverInterface
      * The index contains a list of cache keys related to an image and a filter.
      *
      * @param string $cacheKey
-     *
-     * @return string
      */
-    private function generateIndexKey($cacheKey)
+    private function generateIndexKey($cacheKey): string
     {
         $cacheKeyStack = explode('.', $cacheKey);
 
@@ -189,10 +176,8 @@ final class PsrCacheResolver implements ResolverInterface
 
     /**
      * @param string $cacheKeyPart
-     *
-     * @return string
      */
-    private function sanitizeCacheKeyPart($cacheKeyPart)
+    private function sanitizeCacheKeyPart($cacheKeyPart): string
     {
         if (null === $cacheKeyPart) {
             return '';
@@ -230,11 +215,11 @@ final class PsrCacheResolver implements ResolverInterface
         return $this->cache->commit();
     }
 
-    private function configureOptions(OptionsResolver $resolver)
+    private function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'global_prefix' => 'liip_imagine.resolver_psr_cache',
-            'prefix' => \get_class($this->resolver),
+            'prefix' => $this->resolver::class,
             'index_key' => 'index',
         ]);
 
@@ -247,10 +232,5 @@ final class PsrCacheResolver implements ResolverInterface
         foreach ($allowedTypesList as $option => $allowedTypes) {
             $resolver->setAllowedTypes($option, $allowedTypes);
         }
-    }
-
-    private function setDefaultOptions(OptionsResolver $resolver)
-    {
-        $this->configureOptions($resolver);
     }
 }

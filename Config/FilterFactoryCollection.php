@@ -19,7 +19,7 @@ class FilterFactoryCollection
     /**
      * @var FilterFactoryInterface[]
      */
-    private $filterFactories = [];
+    private array $filterFactories = [];
 
     public function __construct(FilterFactoryInterface ...$filterFactories)
     {

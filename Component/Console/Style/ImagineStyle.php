@@ -21,20 +21,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 final class ImagineStyle
 {
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private \Symfony\Component\Console\Style\SymfonyStyle $io;
 
-    /**
-     * @var bool
-     */
-    private $decoration;
-
-    public function __construct(InputInterface $input, OutputInterface $output, bool $decoration = true)
+    public function __construct(InputInterface $input, OutputInterface $output, private bool $decoration = true)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->decoration = $decoration;
     }
 
     public function text(string $string, array $replacements = []): self
@@ -149,9 +140,9 @@ final class ImagineStyle
             if (false !== $compiled = @vsprintf($format, $replacements)) {
                 return $compiled;
             }
-        } catch (\ValueError $error) {
+        } catch (\ValueError) {
         }
 
-        throw new InvalidArgumentException(\sprintf('Invalid string format "%s" or replacements "%s".', $format, implode(', ', array_map(function ($replacement) { return var_export($replacement, true); }, $replacements))));
+        throw new InvalidArgumentException(\sprintf('Invalid string format "%s" or replacements "%s".', $format, implode(', ', array_map(fn($replacement) => var_export($replacement, true), $replacements))));
     }
 }

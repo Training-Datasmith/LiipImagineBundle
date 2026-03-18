@@ -46,7 +46,7 @@ class FlysystemLoader implements LoaderInterface
         $this->filesystem = $filesystem;
     }
 
-    public function find($path)
+    public function find($path): \Liip\ImagineBundle\Model\Binary
     {
         if (false === $this->filesystem->has($path)) {
             throw new NotLoadableException(\sprintf('Source image "%s" not found.', $path));

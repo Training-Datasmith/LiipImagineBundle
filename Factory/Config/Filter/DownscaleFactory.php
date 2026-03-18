@@ -23,14 +23,8 @@ use Liip\ImagineBundle\Factory\Config\FilterFactoryInterface;
  */
 final class DownscaleFactory implements FilterFactoryInterface
 {
-    /**
-     * @var SizeFactory
-     */
-    private $sizeFactory;
-
-    public function __construct(SizeFactory $sizeFactory)
+    public function __construct(private SizeFactory $sizeFactory)
     {
-        $this->sizeFactory = $sizeFactory;
     }
 
     public function getName(): string

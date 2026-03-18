@@ -37,19 +37,19 @@ class LiipImagineExtension extends Extension implements PrependExtensionInterfac
     /**
      * @var ResolverFactoryInterface[]
      */
-    private $resolversFactories = [];
+    private array $resolversFactories = [];
 
     /**
      * @var LoaderFactoryInterface[]
      */
-    private $loadersFactories = [];
+    private array $loadersFactories = [];
 
-    public function addResolverFactory(ResolverFactoryInterface $resolverFactory)
+    public function addResolverFactory(ResolverFactoryInterface $resolverFactory): void
     {
         $this->resolversFactories[$resolverFactory->getName()] = $resolverFactory;
     }
 
-    public function addLoaderFactory(LoaderFactoryInterface $loaderFactory)
+    public function addLoaderFactory(LoaderFactoryInterface $loaderFactory): void
     {
         $this->loadersFactories[$loaderFactory->getName()] = $loaderFactory;
     }
@@ -161,22 +161,20 @@ class LiipImagineExtension extends Extension implements PrependExtensionInterfac
 
     private function createFilterSets(array $defaultFilterSets, array $filterSets): array
     {
-        return array_map(function (array $filterSet) use ($defaultFilterSets) {
-            return array_replace_recursive($defaultFilterSets, $filterSet);
-        }, $filterSets);
+        return array_map(fn(array $filterSet) => array_replace_recursive($defaultFilterSets, $filterSet), $filterSets);
     }
 
-    private function loadResolvers(array $config, ContainerBuilder $container)
+    private function loadResolvers(array $config, ContainerBuilder $container): void
     {
         $this->createFactories($this->resolversFactories, $config, $container);
     }
 
-    private function loadLoaders(array $config, ContainerBuilder $container)
+    private function loadLoaders(array $config, ContainerBuilder $container): void
     {
         $this->createFactories($this->loadersFactories, $config, $container);
     }
 
-    private function createFactories(array $factories, array $configurations, ContainerBuilder $container)
+    private function createFactories(array $factories, array $configurations, ContainerBuilder $container): void
     {
         foreach ($configurations as $name => $conf) {
             $factories[key($conf)]->create($container, $name, $conf[key($conf)]);

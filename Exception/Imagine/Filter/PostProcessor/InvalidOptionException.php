@@ -29,7 +29,7 @@ class InvalidOptionException extends \RuntimeException implements ExceptionInter
 
         $options = array_map([$this, 'stringifyOptionValue'], $options);
 
-        array_walk($options, function (&$o, $name) {
+        array_walk($options, function (&$o, string $name): void {
             $o = \sprintf('%s="%s"', $name, $o);
         });
 

@@ -26,19 +26,12 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class MozJpegPostProcessor extends AbstractPostProcessor
 {
     /**
-     * @var int|null Quality factor
-     */
-    protected $quality;
-
-    /**
      * @param string   $executablePath Path to the mozjpeg cjpeg binary
      * @param int|null $quality        Quality factor
      */
-    public function __construct($executablePath = '/opt/mozjpeg/bin/cjpeg', $quality = null)
+    public function __construct(string $executablePath = '/opt/mozjpeg/bin/cjpeg', protected $quality = null)
     {
         parent::__construct($executablePath);
-
-        $this->quality = $quality;
     }
 
     /**
@@ -46,10 +39,8 @@ class MozJpegPostProcessor extends AbstractPostProcessor
      *             class's constructor to set the property state.
      *
      * @param int $quality
-     *
-     * @return MozJpegPostProcessor
      */
-    public function setQuality($quality)
+    public function setQuality($quality): static
     {
         $this->triggerSetterMethodDeprecation(__METHOD__);
         $this->quality = $quality;

@@ -29,21 +29,16 @@ class FlipFilterLoader implements LoaderInterface
         return 'x' === $options['axis'] ? $image->flipHorizontally() : $image->flipVertically();
     }
 
-    /**
-     * @return array
-     */
-    private function sanitizeOptions(array $options)
+    private function sanitizeOptions(array $options): array
     {
         $resolver = new OptionsResolver();
         $resolver->setDefault('axis', 'x');
         $resolver->setAllowedValues('axis', ['x', 'horizontal', 'y', 'vertical']);
-        $resolver->setNormalizer('axis', function (Options $options, $value) {
-            return 'horizontal' === $value ? 'x' : ('vertical' === $value ? 'y' : $value);
-        });
+        $resolver->setNormalizer('axis', fn(Options $options, $value) => 'horizontal' === $value ? 'x' : ('vertical' === $value ? 'y' : $value));
 
         try {
             return $resolver->resolve($options);
-        } catch (ExceptionInterface $e) {
+        } catch (ExceptionInterface) {
             throw new InvalidArgumentException('The "axis" option must be set to "x", "horizontal", "y", or "vertical".');
         }
     }

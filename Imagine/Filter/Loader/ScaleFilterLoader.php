@@ -23,25 +23,12 @@ use Imagine\Image\ImageInterface;
 class ScaleFilterLoader implements LoaderInterface
 {
     /**
-     * @var string
+     * @param string $dimensionKey
+     * @param string $ratioKey
+     * @param bool $absoluteRatio
      */
-    protected $dimensionKey;
-
-    /**
-     * @var string
-     */
-    protected $ratioKey;
-
-    /**
-     * @var bool
-     */
-    protected $absoluteRatio;
-
-    public function __construct($dimensionKey = 'dim', $ratioKey = 'to', $absoluteRatio = true)
+    public function __construct(protected $dimensionKey = 'dim', protected $ratioKey = 'to', protected $absoluteRatio = true)
     {
-        $this->dimensionKey = $dimensionKey;
-        $this->ratioKey = $ratioKey;
-        $this->absoluteRatio = $absoluteRatio;
     }
 
     public function load(ImageInterface $image, array $options = [])
@@ -59,8 +46,8 @@ class ScaleFilterLoader implements LoaderInterface
             $ratio = $this->absoluteRatio ? $options[$this->ratioKey] : $this->calcAbsoluteRatio($options[$this->ratioKey]);
         } elseif (isset($options[$this->dimensionKey])) {
             $size = $options[$this->dimensionKey];
-            $width = isset($size[0]) ? $size[0] : null;
-            $height = isset($size[1]) ? $size[1] : null;
+            $width = $size[0] ?? null;
+            $height = $size[1] ?? null;
 
             $widthRatio = $width / $origWidth;
             $heightRatio = $height / $origHeight;
@@ -86,7 +73,7 @@ class ScaleFilterLoader implements LoaderInterface
         return $ratio;
     }
 
-    protected function isImageProcessable($ratio)
+    protected function isImageProcessable($ratio): bool
     {
         return true;
     }

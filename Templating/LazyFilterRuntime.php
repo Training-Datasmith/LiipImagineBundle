@@ -17,34 +17,14 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class LazyFilterRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @var CacheManager
-     */
-    private $cache;
+    private ?array $jsonManifestLookup;
 
-    /**
+    public function __construct(private CacheManager $cache, /**
      * Optional version to remove from the asset filename and re-append to the URL.
-     *
-     * @var string|null
      */
-    private $assetVersion;
-
-    /**
-     * @var array|null
-     */
-    private $jsonManifest;
-
-    /**
-     * @var array|null
-     */
-    private $jsonManifestLookup;
-
-    public function __construct(CacheManager $cache, ?string $assetVersion = null, ?array $jsonManifest = null)
+    private ?string $assetVersion = null, private ?array $jsonManifest = null)
     {
-        $this->cache = $cache;
-        $this->assetVersion = $assetVersion;
-        $this->jsonManifest = $jsonManifest;
-        $this->jsonManifestLookup = $jsonManifest ? array_flip($jsonManifest) : null;
+        $this->jsonManifestLookup = $this->jsonManifest ? array_flip($this->jsonManifest) : null;
     }
 
     /**

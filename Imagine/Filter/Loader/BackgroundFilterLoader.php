@@ -31,17 +31,17 @@ class BackgroundFilterLoader implements LoaderInterface
     public function load(ImageInterface $image, array $options = [])
     {
         $background = $image->palette()->color(
-            isset($options['color']) ? $options['color'] : '#fff',
-            isset($options['transparency']) ? $options['transparency'] : null
+            $options['color'] ?? '#fff',
+            $options['transparency'] ?? null
         );
         $topLeft = new Point(0, 0);
         $size = $image->getSize();
 
         if (isset($options['size'])) {
-            $width = isset($options['size'][0]) ? $options['size'][0] : null;
-            $height = isset($options['size'][1]) ? $options['size'][1] : null;
+            $width = $options['size'][0] ?? null;
+            $height = $options['size'][1] ?? null;
 
-            $position = isset($options['position']) ? $options['position'] : 'center';
+            $position = $options['position'] ?? 'center';
             switch ($position) {
                 case 'topleft':
                     $x = 0;
@@ -56,23 +56,17 @@ class BackgroundFilterLoader implements LoaderInterface
                     $y = 0;
                     break;
                 case 'left':
+                case 'centerleft':
                     $x = 0;
                     $y = ($height - $image->getSize()->getHeight()) / 2;
                     break;
                 case 'centerright':
+                case 'right':
                     $x = $width - $image->getSize()->getWidth();
                     $y = ($height - $image->getSize()->getHeight()) / 2;
                     break;
                 case 'center':
                     $x = ($width - $image->getSize()->getWidth()) / 2;
-                    $y = ($height - $image->getSize()->getHeight()) / 2;
-                    break;
-                case 'centerleft':
-                    $x = 0;
-                    $y = ($height - $image->getSize()->getHeight()) / 2;
-                    break;
-                case 'right':
-                    $x = $width - $image->getSize()->getWidth();
                     $y = ($height - $image->getSize()->getHeight()) / 2;
                     break;
                 case 'bottomleft':
@@ -89,7 +83,6 @@ class BackgroundFilterLoader implements LoaderInterface
                     break;
                 default:
                     throw new \InvalidArgumentException("Unexpected position '{$position}'");
-                    break;
             }
 
             $size = new Box($width, $height);
