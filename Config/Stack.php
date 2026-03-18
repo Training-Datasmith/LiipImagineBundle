@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -27,7 +29,7 @@ final class Stack implements StackInterface
     public function __construct(private string $name, private ?string $dataLoader, /**
      * @var int
      */
-    private ?int $quality, array $filters)
+        private ?int $quality, array $filters)
     {
         $this->setFilters($filters);
     }

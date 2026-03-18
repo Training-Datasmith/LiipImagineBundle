@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -29,8 +31,7 @@ final class Size
          * @var int
          */
         private ?int $height = null
-    )
-    {
+    ) {
     }
 
     public function getWidth(): ?int

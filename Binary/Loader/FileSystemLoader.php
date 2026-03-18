@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -11,7 +13,6 @@
 
 namespace Liip\ImagineBundle\Binary\Loader;
 
-use Liip\ImagineBundle\Binary\Locator\LocatorInterface;
 use Liip\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
 use Liip\ImagineBundle\Exception\InvalidArgumentException;
 use Liip\ImagineBundle\Model\FileBinary;

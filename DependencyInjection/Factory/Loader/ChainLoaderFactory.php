@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -50,6 +52,6 @@ class ChainLoaderFactory extends AbstractLoaderFactory
      */
     private function createLoaderReferences(array $loaders): array
     {
-        return array_combine($loaders, array_map(fn(string $name) => new Reference(\sprintf('liip_imagine.binary.loader.%s', $name)), $loaders));
+        return array_combine($loaders, array_map(fn (string $name) => new Reference(\sprintf('liip_imagine.binary.loader.%s', $name)), $loaders));
     }
 }

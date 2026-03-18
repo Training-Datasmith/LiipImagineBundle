@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -325,7 +327,9 @@ EOF;
     private function assertDICConstructorArguments(Definition $definition, array $arguments): void
     {
         $castArrayElementsToString = function (array $a): array {
-            return array_map(function ($v) { return (string) $v; }, $a);
+            return array_map(function ($v) {
+                return (string) $v;
+            }, $a);
         };
 
         $implodeArrayElements = function (array $a): string {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -22,7 +24,8 @@ abstract class AbstractCompilerPass implements CompilerPassInterface
     protected function log(ContainerBuilder $container, string $message, ...$replacements): void
     {
         $container->log($this, \sprintf(
-            '[liip/imagine-bundle] %s', empty($replacements) ? $message : vsprintf($message, $replacements)
+            '[liip/imagine-bundle] %s',
+            empty($replacements) ? $message : vsprintf($message, $replacements)
         ));
     }
 }

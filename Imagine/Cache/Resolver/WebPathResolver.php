@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -13,7 +15,6 @@ namespace Liip\ImagineBundle\Imagine\Cache\Resolver;
 
 use Liip\ImagineBundle\Binary\BinaryInterface;
 use Liip\ImagineBundle\Imagine\Cache\Helper\PathHelper;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\RequestContext;
 
 class WebPathResolver implements ResolverInterface
@@ -48,7 +49,8 @@ class WebPathResolver implements ResolverInterface
 
     public function resolve($path, $filter): string
     {
-        return \sprintf('%s/%s',
+        return \sprintf(
+            '%s/%s',
             rtrim($this->getBaseUrl(), '/'),
             ltrim($this->getFileUrl($path, $filter), '/')
         );
@@ -118,7 +120,8 @@ class WebPathResolver implements ResolverInterface
         }
         $baseUrl = rtrim($baseUrl, '/\\');
 
-        return \sprintf('%s://%s%s%s',
+        return \sprintf(
+            '%s://%s%s%s',
             $this->requestContext->getScheme(),
             $this->requestContext->getHost(),
             $port,

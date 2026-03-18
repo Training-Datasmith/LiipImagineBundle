@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -25,8 +27,7 @@ final class Point
          * @var int
          */
         private ?int $y = null
-    )
-    {
+    ) {
     }
 
     public function getX(): ?int

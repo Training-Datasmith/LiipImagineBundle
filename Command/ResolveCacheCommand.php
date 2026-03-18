@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -37,17 +39,37 @@ class ResolveCacheCommand extends Command
         $this
             ->setName('liip:imagine:cache:resolve')
             ->setDescription('Warms up the cache for the specified image sources with all or specified filters applied, and prints the list of cache files.')
-            ->addArgument('paths', InputArgument::REQUIRED | InputArgument::IS_ARRAY,
-                'Image file path(s) for which to generate the cached images.')
-            ->addOption('filter', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Filter(s) to use for image resolution; if none explicitly passed, use all filters.')
-            ->addOption('force', 'F', InputOption::VALUE_NONE,
-                'Force generating the image and writing the cache, regardless of whether a cached version already exists.')
-            ->addOption('no-colors', 'C', InputOption::VALUE_NONE,
-                'Write only un-styled text output; remove any colors, styling, etc.')
-            ->addOption('as-script', 'S', InputOption::VALUE_NONE,
-                'Write only machine-readable output; silenced verbose reporting and implies --no-colors.')
-            ->setHelp(<<<'EOF'
+            ->addArgument(
+                'paths',
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                'Image file path(s) for which to generate the cached images.'
+            )
+            ->addOption(
+                'filter',
+                'f',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Filter(s) to use for image resolution; if none explicitly passed, use all filters.'
+            )
+            ->addOption(
+                'force',
+                'F',
+                InputOption::VALUE_NONE,
+                'Force generating the image and writing the cache, regardless of whether a cached version already exists.'
+            )
+            ->addOption(
+                'no-colors',
+                'C',
+                InputOption::VALUE_NONE,
+                'Write only un-styled text output; remove any colors, styling, etc.'
+            )
+            ->addOption(
+                'as-script',
+                'S',
+                InputOption::VALUE_NONE,
+                'Write only machine-readable output; silenced verbose reporting and implies --no-colors.'
+            )
+            ->setHelp(
+                <<<'EOF'
 The <comment>%command.name%</comment> command resolves the passed image(s) for the resolved
 filter(s), outputting results using the following basic format:
   <info>image.ext[filter] (resolved|cached|failed): (resolve-image-path|exception-message)</>

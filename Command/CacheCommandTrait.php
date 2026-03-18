@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -97,7 +99,7 @@ trait CacheCommandTrait
     private function outputCommandResult(array $images, array $filters, string $singularAction): void
     {
         if (!$this->outputMachineReadable) {
-            $wordPluralizer = (fn(int $count, string $singular) => 1 === $count ? $singular : \sprintf('%ss', $singular));
+            $wordPluralizer = (fn (int $count, string $singular) => 1 === $count ? $singular : \sprintf('%ss', $singular));
 
             $imagePathsSize = \count($images);
             $filterSetsSize = \count($filters);

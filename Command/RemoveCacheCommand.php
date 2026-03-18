@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -37,15 +39,31 @@ class RemoveCacheCommand extends Command
         $this
             ->setName('liip:imagine:cache:remove')
             ->setDescription('Remove cache entries for given paths and filters.')
-            ->addArgument('paths', InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
-                'Image file path(s) to run resolution on.')
-            ->addOption('filter', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Filter(s) to use for image remove; if none explicitly passed, use all filters.')
-            ->addOption('no-colors', 'C', InputOption::VALUE_NONE,
-                'Write only un-styled text output; remove any colors, styling, etc.')
-            ->addOption('as-script', 'S', InputOption::VALUE_NONE,
-                'Write only machine-readable output; silenced verbose reporting and implies --no-colors.')
-            ->setHelp(<<<'EOF'
+            ->addArgument(
+                'paths',
+                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                'Image file path(s) to run resolution on.'
+            )
+            ->addOption(
+                'filter',
+                'f',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Filter(s) to use for image remove; if none explicitly passed, use all filters.'
+            )
+            ->addOption(
+                'no-colors',
+                'C',
+                InputOption::VALUE_NONE,
+                'Write only un-styled text output; remove any colors, styling, etc.'
+            )
+            ->addOption(
+                'as-script',
+                'S',
+                InputOption::VALUE_NONE,
+                'Write only machine-readable output; silenced verbose reporting and implies --no-colors.'
+            )
+            ->setHelp(
+                <<<'EOF'
 The <comment>%command.name%</comment> command removes the passed image(s) cache entry for the
 resolved filter(s), outputting results using the following basic format:
   <info>image.ext[filter] (removed|skipped|failure)[: (image-path|exception-message)]</>

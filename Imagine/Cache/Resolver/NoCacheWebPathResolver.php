@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -42,7 +44,8 @@ class NoCacheWebPathResolver implements ResolverInterface
             $port = ":{$this->requestContext->getHttpPort()}";
         }
 
-        return \sprintf('%s://%s%s/%s',
+        return \sprintf(
+            '%s://%s%s/%s',
             $this->requestContext->getScheme(),
             $this->requestContext->getHost(),
             $port,

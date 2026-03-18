@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -31,7 +33,14 @@ class AbstractPostProcessorTest extends AbstractPostProcessorTestCase
             ->expects($this->atLeastOnce())
             ->method('getMimeType')
             ->willReturnOnConsecutiveCalls(
-                'image/jpg', 'image/jpeg', 'text/plain', 'image/png', 'image/jpg', 'image/jpeg', 'text/plain', 'image/png'
+                'image/jpg',
+                'image/jpeg',
+                'text/plain',
+                'image/png',
+                'image/jpg',
+                'image/jpeg',
+                'text/plain',
+                'image/png'
             );
 
         $processor = $this->getPostProcessorInstance();

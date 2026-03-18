@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -86,7 +88,7 @@ class PngquantPostProcessor extends AbstractPostProcessor
                     'will be removed in 3.0. Instead, pass wither an integer representing the max value or an array '.
                     'representing the minimum and maximum values.', E_USER_DEPRECATED);
 
-                $quality = array_map(fn($q) => (int) $q, explode('-', $quality));
+                $quality = array_map(fn ($q) => (int) $q, explode('-', $quality));
             }
 
             if (!\is_array($quality)) {

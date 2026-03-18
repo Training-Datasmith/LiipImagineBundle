@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -31,8 +33,9 @@ class StreamLoader implements LoaderInterface
     public function __construct(/**
      * The wrapper prefix to append to the path to be loaded.
      */
-    protected $wrapperPrefix, $context = null)
-    {
+        protected $wrapperPrefix,
+        $context = null
+    ) {
         if ($context && !\is_resource($context)) {
             throw new \InvalidArgumentException('The given context is no valid resource.');
         }

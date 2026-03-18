@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -55,7 +57,8 @@ class LiipImagineBundle extends Bundle
         $container->addCompilerPass(new MaybeSetMimeServicesAsAliasesCompilerPass());
 
         if (class_exists(AddTopicMetaPass::class)) {
-            $container->addCompilerPass(AddTopicMetaPass::create()
+            $container->addCompilerPass(
+                AddTopicMetaPass::create()
                 ->add(Topics::CACHE_RESOLVED, 'The topic contains messages about resolved image\'s caches')
             );
         }

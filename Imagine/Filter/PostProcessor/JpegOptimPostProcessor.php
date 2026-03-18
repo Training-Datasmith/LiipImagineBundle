@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -28,13 +30,13 @@ class JpegOptimPostProcessor extends AbstractPostProcessor
     public function __construct(string $executablePath = '/usr/bin/jpegoptim', /**
      * If set --strip-all will be passed to jpegoptim.
      */
-    protected $strip = true, /**
+        protected $strip = true, /**
      * If set, --max=$value will be passed to jpegoptim.
      */
-    protected $quality = null, /**
+        protected $quality = null, /**
      * If set to true --all-progressive will be passed to jpegoptim, otherwise --all-normal will be passed.
      */
-    protected $progressive = true, ?string $temporaryRootPath = null)
+        protected $progressive = true, ?string $temporaryRootPath = null)
     {
         parent::__construct($executablePath, $temporaryRootPath);
     }

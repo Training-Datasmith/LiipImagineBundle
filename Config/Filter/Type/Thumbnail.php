@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -34,8 +36,7 @@ final class Thumbnail extends FilterAbstract
          * @var string
          */
         private ?string $filter = null
-    )
-    {
+    ) {
     }
 
     public function getSize(): Size

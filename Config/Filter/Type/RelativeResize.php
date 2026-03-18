@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -35,8 +37,7 @@ final class RelativeResize extends FilterAbstract
          * @var float
          */
         private ?float $scale = null
-    )
-    {
+    ) {
     }
 
     public function getHeighten(): ?float

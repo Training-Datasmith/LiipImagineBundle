@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -55,7 +57,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
                 ->arrayNode('data_root')
                     ->beforeNormalization()
                     ->ifString()
-                        ->then(fn($value) => [$value])
+                        ->then(fn ($value) => [$value])
                     ->end()
                     ->treatNullLike([])
                     ->treatFalseLike([])
@@ -127,7 +129,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
             $paths = $this->getBundlePathsUsingNamedObj($container->getParameter('kernel.bundles'));
         }
 
-        return array_map(fn(string $path) => $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public', $paths);
+        return array_map(fn (string $path) => $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public', $paths);
     }
 
     /**
@@ -137,7 +139,7 @@ class FileSystemLoaderFactory extends AbstractLoaderFactory
      */
     private function getBundlePathsUsingMetadata(array $metadata): array
     {
-        return array_combine(array_keys($metadata), array_map(fn(array $data) => $data['path'], $metadata));
+        return array_combine(array_keys($metadata), array_map(fn (array $data) => $data['path'], $metadata));
     }
 
     /**

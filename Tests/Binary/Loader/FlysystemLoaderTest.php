@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -66,7 +68,8 @@ class FlysystemLoaderTest extends AbstractTest
         $loader = $this->getFlysystemLoader();
 
         $this->assertStringEqualsFile(
-            $this->fixturesPath.'/assets/cats.jpeg', $loader->find('assets/cats.jpeg')->getContent()
+            $this->fixturesPath.'/assets/cats.jpeg',
+            $loader->find('assets/cats.jpeg')->getContent()
         );
     }
 

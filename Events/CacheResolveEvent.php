@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -43,11 +45,12 @@ class CacheResolveEvent extends BCEvent
     public function __construct(/**
      * Resource path.
      */
-    protected $path, /**
+        protected $path, /**
      * Filter name.
      */
-    protected $filter, $url = null)
-    {
+        protected $filter,
+        $url = null
+    ) {
         $this->url = $url;
     }
 

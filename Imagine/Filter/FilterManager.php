@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -15,7 +17,6 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Liip\ImagineBundle\Binary\BinaryInterface;
 use Liip\ImagineBundle\Binary\FileBinaryInterface;
-use Liip\ImagineBundle\Binary\MimeTypeGuesserInterface;
 use Liip\ImagineBundle\Imagine\Filter\Loader\LoaderInterface;
 use Liip\ImagineBundle\Imagine\Filter\PostProcessor\PostProcessorInterface;
 use Liip\ImagineBundle\Model\Binary;
@@ -169,10 +170,10 @@ class FilterManager
 
     private function sanitizeFilters(array $filters): array
     {
-        $sanitized = array_filter($filters, fn(string $name): bool => isset($this->loaders[$name]), ARRAY_FILTER_USE_KEY);
+        $sanitized = array_filter($filters, fn (string $name): bool => isset($this->loaders[$name]), ARRAY_FILTER_USE_KEY);
 
         if (\count($filters) !== \count($sanitized)) {
-            throw new \InvalidArgumentException(\sprintf('Could not find filter(s): %s', implode(', ', array_map(fn(string $name): string => \sprintf('"%s"', $name), array_diff(array_keys($filters), array_keys($sanitized))))));
+            throw new \InvalidArgumentException(\sprintf('Could not find filter(s): %s', implode(', ', array_map(fn (string $name): string => \sprintf('"%s"', $name), array_diff(array_keys($filters), array_keys($sanitized))))));
         }
 
         return $sanitized;
@@ -180,10 +181,10 @@ class FilterManager
 
     private function sanitizePostProcessors(array $processors): array
     {
-        $sanitized = array_filter($processors, fn(string $name): bool => isset($this->postProcessors[$name]), ARRAY_FILTER_USE_KEY);
+        $sanitized = array_filter($processors, fn (string $name): bool => isset($this->postProcessors[$name]), ARRAY_FILTER_USE_KEY);
 
         if (\count($processors) !== \count($sanitized)) {
-            throw new \InvalidArgumentException(\sprintf('Could not find post processor(s): %s', implode(', ', array_map(fn(string $name): string => \sprintf('"%s"', $name), array_diff(array_keys($processors), array_keys($sanitized))))));
+            throw new \InvalidArgumentException(\sprintf('Could not find post processor(s): %s', implode(', ', array_map(fn (string $name): string => \sprintf('"%s"', $name), array_diff(array_keys($processors), array_keys($sanitized))))));
         }
 
         return $sanitized;

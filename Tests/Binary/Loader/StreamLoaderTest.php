@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -33,7 +35,8 @@ class StreamLoaderTest extends AbstractTest
         $loader = new StreamLoader('file://');
 
         $this->assertStringEqualsFile(
-            $this->fixturesPath.'/assets/cats.jpeg', $loader->find($this->fixturesPath.'/assets/cats.jpeg')
+            $this->fixturesPath.'/assets/cats.jpeg',
+            $loader->find($this->fixturesPath.'/assets/cats.jpeg')
         );
     }
 
@@ -42,7 +45,8 @@ class StreamLoaderTest extends AbstractTest
         $loader = new StreamLoader('file://', stream_context_create());
 
         $this->assertStringEqualsFile(
-            $this->fixturesPath.'/assets/cats.jpeg', $loader->find($this->fixturesPath.'/assets/cats.jpeg')
+            $this->fixturesPath.'/assets/cats.jpeg',
+            $loader->find($this->fixturesPath.'/assets/cats.jpeg')
         );
     }
 

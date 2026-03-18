@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -50,7 +52,7 @@ class AwsS3Resolver implements ResolverInterface
     public function __construct(S3Client $storage, protected $bucket, $acl = 'public-read', protected array $getOptions = [], /**
      * Object options added to PUT requests.
      */
-    protected $putOptions = [])
+        protected $putOptions = [])
     {
         $this->storage = $storage;
         $this->acl = $acl ?? '';

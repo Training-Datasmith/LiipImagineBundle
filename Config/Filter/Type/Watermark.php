@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -25,8 +27,7 @@ final class Watermark extends FilterAbstract
          * @var float
          */
         private ?float $size = null
-    )
-    {
+    ) {
     }
 
     public function getImage(): string

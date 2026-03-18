@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -247,7 +249,8 @@ class ConfigurationTest extends TestCase
                 [
                     new BarResolverFactory(),
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),
@@ -308,7 +311,8 @@ class ConfigurationTest extends TestCase
             new Configuration(
                 [
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),
@@ -329,7 +333,8 @@ class ConfigurationTest extends TestCase
             new Configuration(
                 [
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),
@@ -352,7 +357,8 @@ class ConfigurationTest extends TestCase
             new Configuration(
                 [
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),
@@ -433,7 +439,8 @@ class ConfigurationTest extends TestCase
             new Configuration(
                 [
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),
@@ -459,7 +466,8 @@ class ConfigurationTest extends TestCase
             new Configuration(
                 [
                     new WebPathResolverFactory(),
-                ], [
+                ],
+                [
                     new FileSystemLoaderFactory(),
                 ]
             ),

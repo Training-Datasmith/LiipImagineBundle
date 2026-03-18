@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -27,10 +29,10 @@ class OptiPngPostProcessor extends AbstractPostProcessor
     public function __construct(string $executablePath = '/usr/bin/optipng', /**
      * If set --oN will be passed to optipng.
      */
-    protected $level = 7, /**
+        protected $level = 7, /**
      * If set --strip=all will be passed to optipng.
      */
-    protected $strip = true, ?string $temporaryRootPath = null)
+        protected $strip = true, ?string $temporaryRootPath = null)
     {
         parent::__construct($executablePath, $temporaryRootPath);
     }

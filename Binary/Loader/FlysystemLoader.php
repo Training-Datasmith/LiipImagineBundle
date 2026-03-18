@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -32,8 +34,8 @@ class FlysystemLoader implements LoaderInterface
 
     public function __construct(
         $extensionGuesser,
-        FilesystemInterface $filesystem)
-    {
+        FilesystemInterface $filesystem
+    ) {
         if (!$extensionGuesser instanceof MimeTypesInterface && !$extensionGuesser instanceof DeprecatedExtensionGuesserInterface) {
             throw new InvalidArgumentException('$extensionGuesser must be an instance of Symfony\Component\Mime\MimeTypesInterface or Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface');
         }

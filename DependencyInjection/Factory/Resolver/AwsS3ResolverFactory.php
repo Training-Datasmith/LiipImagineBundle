@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -27,7 +29,9 @@ class AwsS3ResolverFactory extends AbstractResolverFactory
         if ($config['client_id']) {
             $container->setAlias($awsS3ClientId, new Alias($config['client_id']));
         } else {
-            $container->setDefinition($awsS3ClientId, (new Definition('Aws\S3\S3Client'))
+            $container->setDefinition(
+                $awsS3ClientId,
+                (new Definition('Aws\S3\S3Client'))
                 ->setFactory(['Aws\S3\S3Client', 'factory'])
                 ->addArgument($config['client_config'])
             );
@@ -134,13 +138,13 @@ class AwsS3ResolverFactory extends AbstractResolverFactory
                 ->end()
             ->end()
             ->beforeNormalization()
-                ->ifTrue(static fn($v) => isset($v['client_id']) && isset($v['client_config']))
+                ->ifTrue(static fn ($v) => isset($v['client_id']) && isset($v['client_config']))
                 ->then(static function ($v): void {
                     throw new InvalidConfigurationException('Children config "client_id" and "client_config" cannot be configured at the same time.');
                 })
             ->end()
             ->beforeNormalization()
-                ->ifTrue(static fn($v) => isset($v['client_id']))
+                ->ifTrue(static fn ($v) => isset($v['client_id']))
                 ->then(function (array $config): array {
                     $config['client_config'] = [];
 

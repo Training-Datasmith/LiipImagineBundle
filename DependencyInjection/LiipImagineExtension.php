@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -161,7 +163,7 @@ class LiipImagineExtension extends Extension implements PrependExtensionInterfac
 
     private function createFilterSets(array $defaultFilterSets, array $filterSets): array
     {
-        return array_map(fn(array $filterSet) => array_replace_recursive($defaultFilterSets, $filterSet), $filterSets);
+        return array_map(fn (array $filterSet) => array_replace_recursive($defaultFilterSets, $filterSet), $filterSets);
     }
 
     private function loadResolvers(array $config, ContainerBuilder $container): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -53,7 +55,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->beforeNormalization()
-                ->ifTrue(fn($v) => empty($v['loaders'])
+                ->ifTrue(fn ($v) => empty($v['loaders'])
                 || empty($v['loaders']['default'])
                 || empty($v['resolvers'])
                 || empty($v['resolvers']['default']))
@@ -91,7 +93,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('driver')->defaultValue('gd')
                     ->validate()
-                        ->ifTrue(fn($v) => !\in_array($v, ['gd', 'imagick', 'gmagick', 'vips'], true))
+                        ->ifTrue(fn ($v) => !\in_array($v, ['gd', 'imagick', 'gmagick', 'vips'], true))
                         ->thenInvalid('Invalid imagine driver specified: %s')
                     ->end()
                 ->end()
@@ -137,7 +139,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('filter_runtime_action')->defaultValue(\sprintf('%s::filterRuntimeAction', ImagineController::class))->end()
                         ->integerNode('redirect_response_code')->defaultValue(302)
                             ->validate()
-                                ->ifTrue(fn($redirectResponseCode) => !\in_array($redirectResponseCode, ControllerConfig::REDIRECT_RESPONSE_CODES, true))
+                                ->ifTrue(fn ($redirectResponseCode) => !\in_array($redirectResponseCode, ControllerConfig::REDIRECT_RESPONSE_CODES, true))
                                 ->thenInvalid('Invalid redirect response code "%s" (must be 201, 301, 302, 303, 307, or 308).')
                             ->end()
                         ->end()
@@ -185,7 +187,7 @@ class Configuration implements ConfigurationInterface
                         ->info('Twig mode: none/lazy/legacy (default)')
                         ->values(['none', 'lazy', 'legacy'])
                         ->validate()
-                            ->ifTrue(fn($v) => 'legacy' === $v)
+                            ->ifTrue(fn ($v) => 'legacy' === $v)
                             ->then(function ($v) {
                                 @trigger_error('Twig "legacy" mode has been deprecated and will be removed in 3.0. Use "none" or "lazy".', E_USER_DEPRECATED);
 

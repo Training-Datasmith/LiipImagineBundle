@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -34,7 +36,7 @@ class FlipFilterLoader implements LoaderInterface
         $resolver = new OptionsResolver();
         $resolver->setDefault('axis', 'x');
         $resolver->setAllowedValues('axis', ['x', 'horizontal', 'y', 'vertical']);
-        $resolver->setNormalizer('axis', fn(Options $options, $value) => 'horizontal' === $value ? 'x' : ('vertical' === $value ? 'y' : $value));
+        $resolver->setNormalizer('axis', fn (Options $options, $value) => 'horizontal' === $value ? 'x' : ('vertical' === $value ? 'y' : $value));
 
         try {
             return $resolver->resolve($options);

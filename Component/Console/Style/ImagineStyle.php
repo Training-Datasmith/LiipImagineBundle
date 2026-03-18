@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -143,6 +145,6 @@ final class ImagineStyle
         } catch (\ValueError) {
         }
 
-        throw new InvalidArgumentException(\sprintf('Invalid string format "%s" or replacements "%s".', $format, implode(', ', array_map(fn($replacement) => var_export($replacement, true), $replacements))));
+        throw new InvalidArgumentException(\sprintf('Invalid string format "%s" or replacements "%s".', $format, implode(', ', array_map(fn ($replacement) => var_export($replacement, true), $replacements))));
     }
 }

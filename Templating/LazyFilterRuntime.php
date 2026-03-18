@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -22,7 +24,7 @@ final class LazyFilterRuntime implements RuntimeExtensionInterface
     public function __construct(private CacheManager $cache, /**
      * Optional version to remove from the asset filename and re-append to the URL.
      */
-    private ?string $assetVersion = null, private ?array $jsonManifest = null)
+        private ?string $assetVersion = null, private ?array $jsonManifest = null)
     {
         $this->jsonManifestLookup = $this->jsonManifest ? array_flip($this->jsonManifest) : null;
     }

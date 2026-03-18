@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -17,8 +19,11 @@ class InvalidOptionException extends \RuntimeException implements ExceptionInter
 {
     public function __construct(string $message, array $options = [])
     {
-        parent::__construct(\sprintf('Invalid post-processor configuration provided (%s) with options %s.',
-            $message, $this->stringifyOptions($options)));
+        parent::__construct(\sprintf(
+            'Invalid post-processor configuration provided (%s) with options %s.',
+            $message,
+            $this->stringifyOptions($options)
+        ));
     }
 
     private function stringifyOptions(array $options = []): string

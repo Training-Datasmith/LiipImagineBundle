@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the `liip/LiipImagineBundle` project.
  *
@@ -37,7 +39,9 @@ class ImagineController
     ) {
         if (null === $controllerConfig) {
             @trigger_error(\sprintf(
-                'Instantiating "%s" without a forth argument of type "%s" is deprecated since 2.2.0 and will be required in 3.0.', self::class, ControllerConfig::class
+                'Instantiating "%s" without a forth argument of type "%s" is deprecated since 2.2.0 and will be required in 3.0.',
+                self::class,
+                ControllerConfig::class
             ), E_USER_DEPRECATED);
         }
 
@@ -63,7 +67,7 @@ class ImagineController
         // TODO once we limit `symfony/http-foundation` to 6.4 or newer, use `$request->query->getString()`
         $resolver = $request->query->has('resolver') ? (string) $request->query->get('resolver') : null;
 
-        return $this->createRedirectResponse(fn() => $this->filterService->getUrlOfFilteredImage(
+        return $this->createRedirectResponse(fn () => $this->filterService->getUrlOfFilteredImage(
             $path,
             $filter,
             $resolver,
@@ -96,7 +100,7 @@ class ImagineController
             throw new BadRequestHttpException(\sprintf('Signed url does not pass the sign check for path "%s" and filter "%s" and runtime config %s', $path, $filter, json_encode($runtimeConfig)));
         }
 
-        return $this->createRedirectResponse(fn() => $this->filterService->getUrlOfFilteredImageWithRuntimeFilters(
+        return $this->createRedirectResponse(fn () => $this->filterService->getUrlOfFilteredImageWithRuntimeFilters(
             $path,
             $filter,
             $runtimeConfig,
