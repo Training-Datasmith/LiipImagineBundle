@@ -61,9 +61,15 @@ class CacheManager
     /**
      * Adds a resolver to handle cached images for the given filter.
      *
-     * @param string $filter
+     * If the resolver implements CacheManagerAwareInterface, the manager is injected
+     * back into the resolver immediately after registration.
+     *
+     * @param string            $filter   Filter name or 'default' to set the global fallback resolver
+     * @param ResolverInterface $resolver The resolver that stores/retrieves filtered image URLs
+     *
+     * @return void
      */
-    public function addResolver($filter, ResolverInterface $resolver): void
+    public function addResolver(string $filter, ResolverInterface $resolver): void
     {
         $this->resolvers[$filter] = $resolver;
 
@@ -73,17 +79,21 @@ class CacheManager
     }
 
     /**
-     * Gets filtered path for rendering in the browser.
-     * It could be the cached one or an url of filter action.
+     * Returns the browser-accessible URL for a filtered image.
      *
-     * @param string $path          The path where the resolved file is expected
-     * @param string $filter
-     * @param string $resolver
-     * @param int    $referenceType
+     * If the filtered image is already cached (and WebP generation is disabled), the
+     * cached URL is returned directly. Otherwise a filter action URL is generated so
+     * the image will be processed on first access.
      *
-     * @return string
+     * @param string      $path          Source image path relative to the configured web root
+     * @param string      $filter        Name of the filter set to apply
+     * @param array       $runtimeConfig Optional per-request filter overrides; generates a signed runtime URL when non-empty
+     * @param string|null $resolver      Resolver name override; null uses the filter's configured resolver
+     * @param int         $referenceType URL reference type constant from UrlGeneratorInterface (default: ABSOLUTE_URL)
+     *
+     * @return string Browser-accessible URL for the filtered image
      */
-    public function getBrowserPath($path, $filter, array $runtimeConfig = [], $resolver = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    public function getBrowserPath(string $path, string $filter, array $runtimeConfig = [], ?string $resolver = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): string
     {
         if (!empty($runtimeConfig)) {
             $rcPath = $this->getRuntimePath($path, $runtimeConfig);
@@ -99,11 +109,17 @@ class CacheManager
     }
 
     /**
-     * Get path to runtime config image.
+     * Builds the internal cache path for a runtime-configured image.
      *
-     * @param string $path
+     * The path includes an HMAC signature so that arbitrary filter combinations
+     * cannot be requested by anonymous users.
+     *
+     * @param string $path          Source image path (leading slash is stripped)
+     * @param array  $runtimeConfig Per-request filter configuration that was applied
+     *
+     * @return string Internal path of the form "rc/{signature}/{path}"
      */
-    public function getRuntimePath($path, array $runtimeConfig): string
+    public function getRuntimePath(string $path, array $runtimeConfig): string
     {
         $path = ltrim($path, '/');
 
@@ -111,16 +127,20 @@ class CacheManager
     }
 
     /**
-     * Returns a web accessible URL.
+     * Generates a Symfony route URL to the filter action for the given path.
      *
-     * @param string $path          The path where the resolved file is expected
-     * @param string $filter        The name of the imagine filter in effect
-     * @param string $resolver
-     * @param int    $referenceType The type of reference to be generated (one of the UrlGenerator constants)
+     * For static filters this routes to `liip_imagine_filter`. When runtime config
+     * is provided the route is `liip_imagine_filter_runtime` with a signed hash.
      *
-     * @return string
+     * @param string      $path          Source image path
+     * @param string      $filter        Filter set name
+     * @param array       $runtimeConfig Optional per-request filter overrides; triggers runtime route generation when non-empty
+     * @param string|null $resolver      Resolver name to embed in the route parameters
+     * @param int         $referenceType UrlGeneratorInterface constant (ABSOLUTE_URL, ABSOLUTE_PATH, etc.)
+     *
+     * @return string Generated route URL
      */
-    public function generateUrl($path, $filter, array $runtimeConfig = [], $resolver = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    public function generateUrl(string $path, string $filter, array $runtimeConfig = [], ?string $resolver = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): string
     {
         $params = [
             'path' => ltrim($path, '/'),
@@ -141,31 +161,34 @@ class CacheManager
     }
 
     /**
-     * Checks whether the path is already stored within the respective Resolver.
+     * Checks whether a filtered image is already stored in the resolver's cache.
      *
-     * @param string $path
-     * @param string $filter
-     * @param string $resolver
+     * @param string      $path     Source image path
+     * @param string      $filter   Filter set name
+     * @param string|null $resolver Resolver name override; null uses the filter's configured resolver
      *
-     * @return bool
+     * @return bool True when the filtered image exists in the cache
      */
-    public function isStored($path, $filter, $resolver = null)
+    public function isStored(string $path, string $filter, ?string $resolver = null): bool
     {
         return $this->getResolver($filter, $resolver)->isStored($path, $filter);
     }
 
     /**
-     * Resolves filtered path for rendering in the browser.
+     * Resolves the cached URL for a filtered image.
      *
-     * @param string $path
-     * @param string $filter
-     * @param string $resolver
+     * Dispatches PRE_RESOLVE and POST_RESOLVE events, allowing listeners to
+     * rewrite the path or the resulting URL.
      *
-     * @throws NotFoundHttpException if the path can not be resolved
+     * @param string      $path     Source image path
+     * @param string      $filter   Filter set name
+     * @param string|null $resolver Resolver name override; null uses the filter's configured resolver
      *
-     * @return string The url of resolved image
+     * @return string The browser-accessible URL of the cached filtered image
+     *
+     * @throws NotFoundHttpException If the path contains directory traversal sequences (/../)
      */
-    public function resolve($path, $filter, $resolver = null)
+    public function resolve(string $path, string $filter, ?string $resolver = null): string
     {
         if (false !== mb_strpos($path, '/../') || 0 === mb_strpos($path, '../')) {
             throw new NotFoundHttpException(\sprintf("Source image was searched with '%s' outside of the defined root path", $path));
@@ -183,13 +206,18 @@ class CacheManager
     }
 
     /**
-     * @see ResolverInterface::store
+     * Stores a filtered image binary in the resolver's cache.
      *
-     * @param string $path
-     * @param string $filter
-     * @param string $resolver
+     * @param BinaryInterface $binary   The filtered image binary with its MIME type
+     * @param string          $path     Source image path used as the cache key
+     * @param string          $filter   Filter set name used as part of the cache key
+     * @param string|null     $resolver Resolver name override; null uses the filter's configured resolver
+     *
+     * @return void
+     *
+     * @see ResolverInterface::store
      */
-    public function store(BinaryInterface $binary, $path, $filter, $resolver = null): void
+    public function store(BinaryInterface $binary, string $path, string $filter, ?string $resolver = null): void
     {
         $this->getResolver($filter, $resolver)->store($binary, $path, $filter);
     }
