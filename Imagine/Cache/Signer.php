@@ -44,7 +44,7 @@ class Signer implements SignerInterface
      *
      * @see CacheManager::getRuntimePath()
      */
-    public function sign(string $path, ?array $runtimeConfig = null): string
+    public function sign($path, ?array $runtimeConfig = null)
     {
         if ($runtimeConfig) {
             array_walk_recursive($runtimeConfig, function (&$value): void {
@@ -68,7 +68,7 @@ class Signer implements SignerInterface
      *
      * @return bool True if the hash is valid, false otherwise
      */
-    public function check(string $hash, string $path, ?array $runtimeConfig = null): bool
+    public function check($hash, $path, ?array $runtimeConfig = null)
     {
         return $hash === $this->sign($path, $runtimeConfig);
     }
