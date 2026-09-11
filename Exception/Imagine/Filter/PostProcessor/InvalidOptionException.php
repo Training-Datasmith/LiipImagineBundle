@@ -44,7 +44,7 @@ class InvalidOptionException extends \RuntimeException implements ExceptionInter
     private function stringifyOptionValue($value): string
     {
         if (\is_scalar($value)) {
-            return $value;
+            return (string) $value;
         }
 
         return json_encode($value);

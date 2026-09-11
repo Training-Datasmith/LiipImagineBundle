@@ -202,7 +202,9 @@ class CacheManager
         $postEvent = new CacheResolveEvent($preEvent->getPath(), $preEvent->getFilter(), $url);
         $this->dispatchWithBC($postEvent, ImagineEvents::POST_RESOLVE);
 
-        return $postEvent->getUrl();
+        $resolvedUrl = $postEvent->getUrl();
+
+        return (string) (null !== $resolvedUrl ? $resolvedUrl : $url);
     }
 
     /**

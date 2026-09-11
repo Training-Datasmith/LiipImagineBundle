@@ -84,10 +84,11 @@ class AbstractPostProcessorTest extends AbstractPostProcessorTestCase
         $data = [];
 
         foreach ($find->in(__DIR__)->name('*.php')->files() as $f) {
-            $data[] = [file_get_contents($f), 'application/x-php', 'php', 'foo-context', []];
-            $data[] = [file_get_contents($f), 'application/x-php', 'php', 'bar-context', ['temp_dir' => null]];
-            $data[] = [file_get_contents($f), 'application/x-php', 'php', 'bar-context', ['temp_dir' => sys_get_temp_dir()]];
-            $data[] = [file_get_contents($f), 'application/x-php', 'php', 'baz-context', ['temp_dir' => \sprintf('%s/foo/bar/baz', sys_get_temp_dir())]];
+            $contents = file_get_contents($f->getPathname());
+            $data[] = [$contents, 'application/x-php', 'php', 'foo-context', []];
+            $data[] = [$contents, 'application/x-php', 'php', 'bar-context', ['temp_dir' => null]];
+            $data[] = [$contents, 'application/x-php', 'php', 'bar-context', ['temp_dir' => sys_get_temp_dir()]];
+            $data[] = [$contents, 'application/x-php', 'php', 'baz-context', ['temp_dir' => \sprintf('%s/foo/bar/baz', sys_get_temp_dir())]];
         }
 
         return $data;

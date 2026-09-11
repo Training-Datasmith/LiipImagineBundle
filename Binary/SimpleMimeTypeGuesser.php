@@ -33,7 +33,7 @@ class SimpleMimeTypeGuesser implements MimeTypeGuesserInterface
             throw new InvalidArgumentException('$mimeTypeGuesser must be an instance of Symfony\Component\Mime\MimeTypeGuesserInterface or Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface');
         }
 
-        if (interface_exists((SymfonyMimeTypeGuesserInterface::class) && $mimeTypeGuesser instanceof DeprecatedSymfonyMimeTypeGuesserInterface)) {
+        if (interface_exists(SymfonyMimeTypeGuesserInterface::class) && $mimeTypeGuesser instanceof DeprecatedSymfonyMimeTypeGuesserInterface) {
             @trigger_error(\sprintf('Passing a %s to "%s()" is deprecated since Symfony 4.3, pass a "%s" instead.', DeprecatedSymfonyMimeTypeGuesserInterface::class, __METHOD__, SymfonyMimeTypeGuesserInterface::class), E_USER_DEPRECATED);
         }
 
